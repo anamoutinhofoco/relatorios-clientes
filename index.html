@@ -10,13 +10,12 @@
 <style>
 :root {
   --blue:       #1168C8;   /* azul performance — primary */
-  --blue-deep:  #0B386D;   /* azul profundo — headings */
-  --blue-title: #0A618D;   /* azul institucional — big titles */
-  --blue-brt:   #1168C8;   /* values / numbers */
+  --blue-deep:  #0B386D;   /* azul profundo — headings / sidebar */
+  --blue-title: #0A618D;   /* azul institucional */
   --blue-soft:  #3DA0E6;   /* azul claro — light accent */
-  --blob:       #DCEBFB;   /* pale blue */
+  --blob:       #DCEBFB;
   --blob2:      #EAF3FD;
-  --circle:     #DEEBFC;   /* icon circle bg */
+  --circle:     #DEEBFC;
   --circle2:    #EAF3FD;
   --ice:        #EAF3FD;
   --ice2:       #F3F9FE;
@@ -27,61 +26,79 @@
   --line:       #E4EEF9;
   --navy:       #0B386D;
   --green:      #16A34A;
+  --red:        #DC2626;
   --shadow:     0 8px 30px rgba(17,104,200,.10);
   --shadow-sm:  0 4px 18px rgba(17,104,200,.08);
-  --r-card:     24px;
+  --r-card:     20px;
   --r-pill:     100px;
+  --sidebar-w:  72px;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
   font-family: 'Montserrat', 'Segoe UI', sans-serif;
-  background:
-    radial-gradient(1200px 560px at -8% -6%, var(--blob) 0%, transparent 55%),
-    radial-gradient(1000px 520px at 108% -4%, var(--blob2) 0%, transparent 55%),
-    radial-gradient(1000px 520px at 50% 118%, var(--blob) 0%, transparent 55%),
-    #EEF6FE;
-  background-attachment: fixed;
+  background: #EEF6FE;
   min-height: 100vh;
   color: var(--ink);
   -webkit-font-smoothing: antialiased;
 }
 
-/* ── SETUP BAR ── */
+/* ── APP SHELL / SIDEBAR ── */
+.app-shell { display: flex; min-height: 100vh; }
+.sidebar {
+  width: var(--sidebar-w); flex-shrink: 0; background: var(--blue-deep);
+  display: flex; flex-direction: column; align-items: center; gap: 22px;
+  padding: 18px 0 16px; position: sticky; top: 0; height: 100vh;
+}
+.side-mark {
+  width: 34px; height: 34px; border-radius: 10px; background: var(--blue);
+  color: white; display: flex; align-items: center; justify-content: center;
+  font-family: 'Montserrat',sans-serif; font-weight: 800; font-size: 15px; margin-bottom: 6px;
+}
+.side-nav { display: flex; flex-direction: column; gap: 6px; }
+.side-ico {
+  width: 40px; height: 40px; border-radius: 12px; border: none; cursor: pointer;
+  background: transparent; color: #7FAEDD; display: flex; align-items: center; justify-content: center;
+  transition: background .15s, color .15s;
+}
+.side-ico:hover { background: rgba(255,255,255,.08); color: #BFE0FF; }
+.side-ico.active { background: rgba(255,255,255,.14); color: white; }
+.side-bottom { margin-top: auto; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.side-avatar {
+  width: 34px; height: 34px; border-radius: 50%; background: var(--blue-soft); color: white;
+  display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800;
+  position: relative; font-family: 'Montserrat',sans-serif;
+}
+.avatar-dot { position:absolute; right:-1px; bottom:-1px; width:9px; height:9px; border-radius:50%; background:var(--green); border:2px solid var(--blue-deep); }
+.main { flex: 1; min-width: 0; }
+
+/* ── TOP BAR ── */
 .setup-bar {
-  background: var(--navy);
-  padding: 10px 16px; display: flex; align-items: center; gap: 10px;
-  flex-wrap: wrap;
+  background: var(--white); border-bottom: 1px solid var(--line);
+  padding: 12px 20px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
 }
-.setup-bar label { color: #9EC6F5; font-size: 11px; font-weight: 800; white-space: nowrap; letter-spacing: .5px; text-transform: uppercase; }
-.setup-bar input {
-  flex: 1; min-width: 180px; padding: 8px 14px; border-radius: 10px;
-  border: 1.5px solid rgba(120,175,240,.25); font-size: 13px;
-  background: rgba(255,255,255,.07); color: white; font-family: inherit;
-}
-.setup-bar input:focus { outline: none; border-color: var(--blue-soft); }
-.setup-bar input::placeholder { color: rgba(255,255,255,.35); }
+.setup-bar label { color: var(--ink3); font-size: 11px; font-weight: 800; white-space: nowrap; letter-spacing: .5px; text-transform: uppercase; }
 .setup-bar select {
-  padding: 8px 12px; border-radius: 10px; border: 1.5px solid rgba(120,175,240,.25);
-  font-size: 12px; background: rgba(255,255,255,.07); color: white; cursor: pointer;
+  padding: 8px 12px; border-radius: 10px; border: 1.5px solid var(--line);
+  font-size: 12px; background: var(--ice2); color: var(--ink); cursor: pointer;
   font-family: inherit; font-weight: 700;
 }
 .btn-connect {
   background: var(--blue); color: white; border: none; padding: 9px 20px;
   border-radius: 10px; font-size: 12px; font-weight: 800; cursor: pointer;
-  letter-spacing: .3px; font-family: inherit; box-shadow: 0 4px 14px rgba(17,104,200,.35);
+  letter-spacing: .3px; font-family: inherit; box-shadow: 0 4px 14px rgba(17,104,200,.30);
   transition: transform .15s, box-shadow .15s;
 }
-.btn-connect:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(17,104,200,.45); }
+.btn-connect:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(17,104,200,.4); }
 .btn-connect:disabled { opacity: .55; cursor: default; transform: none; }
-.btn-bulk { background: var(--green); box-shadow: 0 4px 14px rgba(22,163,74,.35); margin-left: auto; }
-.btn-bulk:hover { box-shadow: 0 6px 20px rgba(22,163,74,.45); }
+.btn-bulk { background: var(--green); box-shadow: 0 4px 14px rgba(22,163,74,.3); margin-left: auto; }
+.btn-bulk:hover { box-shadow: 0 6px 20px rgba(22,163,74,.4); }
 
 /* ── TABS ── */
 .tabs-wrap {
   background: var(--white); border-bottom: 1.5px solid var(--line);
-  display: flex; flex-wrap: wrap; padding: 6px 16px;
+  display: flex; flex-wrap: wrap; padding: 6px 20px;
   position: sticky; top: 0; z-index: 10;
-  box-shadow: 0 2px 16px rgba(17,104,200,.08);
+  box-shadow: 0 2px 16px rgba(17,104,200,.06);
   max-height: 96px; overflow-y: auto;
 }
 .tab {
@@ -92,159 +109,158 @@ body {
 .tab:hover { color: var(--blue); }
 .tab.active { color: var(--blue); border-bottom-color: var(--blue); }
 
-/* ── PAGE (web sheet) ── */
-.page { max-width: 1120px; margin: 0 auto; padding: 30px 22px 50px; }
-#exportTarget {
-  position: relative; background: var(--white); border-radius: 34px;
-  padding: 34px 34px 22px; overflow: hidden;
-  box-shadow: 0 24px 70px rgba(17,104,200,.14); border: 1px solid var(--line);
-}
-/* decorative blobs on the sheet corners */
-.sheet-blobs { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
-#exportTarget > *:not(.sheet-blobs) { position: relative; z-index: 1; }
+/* ── PAGE ── */
+.page { max-width: 1360px; margin: 0 auto; padding: 22px 22px 50px; }
+#exportTarget { background: var(--white); border-radius: 26px; padding: 26px 26px 22px; border: 1px solid var(--line); box-shadow: var(--shadow); }
 
-/* ── HEADER / HERO ── */
-.dash-header {
-  position: relative; margin-bottom: 26px; padding-bottom: 8px;
+/* ── REPORT HEADER ── */
+.r-header { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: 18px; }
+.r-ico { width: 58px; height: 58px; border-radius: 16px; background: var(--blue-deep); color: white; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.r-ico svg { width: 28px; height: 28px; }
+.r-title-wrap { flex: 1; min-width: 220px; }
+.r-eyebrow { font-size: 11px; font-weight: 800; letter-spacing: .12em; color: var(--ink3); text-transform: uppercase; }
+.r-title { font-size: 30px; font-weight: 800; color: var(--blue-deep); line-height: 1.15; }
+.r-sub { font-size: 13.5px; font-weight: 700; color: var(--ink2); margin-top: 2px; }
+.r-sub b { color: var(--blue); }
+.r-pills { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.pill {
+  display: inline-flex; align-items: center; gap: 7px; background: var(--ice2);
+  border: 1px solid var(--line); border-radius: 12px; padding: 8px 13px;
+  font-size: 12px; font-weight: 700; color: var(--ink2); white-space: nowrap;
 }
-.hdr-blobs { display: none; }
-.hdr-row { display: flex; align-items: center; justify-content: center; margin-bottom: 22px; }
-.hdr-bell { display: none; }
-.hdr-logo-mark { display: inline-flex; align-items: center; gap: 4px; font-family: 'Montserrat', sans-serif; line-height: 1; }
-.hdr-logo-mark .lm-foco { font-size: 27px; font-weight: 500; color: var(--blue); letter-spacing: -.2px; }
-.hdr-logo-mark .lm-marketing { font-size: 27px; font-weight: 800; color: var(--blue); letter-spacing: -.2px; }
-.hdr-logo-mark .lm-dot { font-size: 27px; font-weight: 800; color: var(--blue); margin: 0 1px 0 -1px; }
-.hdr-logo-mark svg { color: var(--blue); display: block; margin-left: 1px; }
-.h-title {
-  color: var(--blue-title); font-size: 54px; font-weight: 900;
-  line-height: .96; letter-spacing: -1px; text-transform: uppercase; max-width: 70%;
-}
-.h-accent { width: 190px; height: 5px; border-radius: 4px; background: var(--blue); margin: 14px 0 0; }
-.h-sub { margin-top: 14px; font-size: 18px; font-weight: 700; color: var(--ink2); max-width: 72%; }
-.h-sub b { color: var(--blue); font-weight: 800; }
-.h-unit { color: var(--blue-soft); font-weight: 800; }
-.date-pill {
-  margin-top: 18px; display: inline-flex; align-items: center; gap: 9px;
-  background: var(--white); border: 1.5px solid var(--line);
-  border-radius: 14px; padding: 10px 17px; color: var(--ink); font-size: 13.5px; font-weight: 700;
-  box-shadow: var(--shadow-sm);
-}
-.date-pill svg { color: var(--blue); }
-.date-pill .caret { color: var(--ink3); margin-left: 2px; }
-.live-pill {
-  margin-top: 18px; margin-left: 10px; display: inline-flex; align-items: center; gap: 8px;
-  background: #E8F7EE; border: 1.5px solid #BEEBCF; border-radius: 14px;
-  padding: 10px 15px; color: var(--green); font-size: 12.5px; font-weight: 800;
-}
-.live-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--green); box-shadow: 0 0 0 4px rgba(22,163,74,.15); }
+.pill svg { color: var(--blue); flex-shrink: 0; }
+.pill.sync { background: #E8F7EE; border-color: #BEEBCF; color: var(--green); }
+.pill.sync svg { color: var(--green); }
+.pill .caret { color: var(--ink3); margin-left: 2px; }
 
-/* ── KPI CARDS ── */
-.kpi-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 18px; margin-bottom: 22px; }
-.kpi-card {
-  background: linear-gradient(160deg, var(--ice2), var(--white));
-  border-radius: 22px; padding: 24px 18px 22px;
-  text-align: center; box-shadow: var(--shadow-sm); border: 1px solid var(--line);
-}
-.kpi-ico {
-  width: 58px; height: 58px; border-radius: 50%; background: var(--circle);
-  display: flex; align-items: center; justify-content: center; margin: 0 auto 14px; color: var(--blue);
-}
-.kpi-ico svg { width: 28px; height: 28px; }
-.kpi-label { font-size: 12px; color: var(--ink3); font-weight: 700; text-transform: uppercase; letter-spacing: .6px; margin-bottom: 8px; line-height: 1.2; }
-.kpi-value { font-size: 30px; font-weight: 900; color: var(--blue-deep); line-height: 1; }
+/* ── KPI ROW ── */
+.kpi-row { display: grid; grid-template-columns: repeat(6,1fr); gap: 12px; margin-bottom: 18px; }
+.kpi-card { background: var(--ice2); border: 1px solid var(--line); border-radius: 16px; padding: 15px 14px 13px; }
+.kpi-top { display:flex; align-items:center; gap:9px; margin-bottom: 10px; }
+.kpi-ico { width: 32px; height: 32px; border-radius: 9px; background: var(--white); color: var(--blue); display:flex; align-items:center; justify-content:center; box-shadow: var(--shadow-sm); flex-shrink:0; }
+.kpi-ico svg { width: 16px; height: 16px; }
+.kpi-label { font-size: 10px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; color: var(--ink3); line-height: 1.25; }
+.kpi-value { font-size: 21px; font-weight: 900; color: var(--blue-deep); line-height: 1; }
+.kpi-foot { display:flex; align-items:center; gap:8px; margin-top:8px; flex-wrap:wrap; }
+.delta { font-size: 11px; font-weight: 800; display:inline-flex; align-items:center; gap:3px; }
+.delta.good { color: var(--green); }
+.delta.bad { color: var(--red); }
+.kpi-extra { font-size: 10.5px; font-weight: 700; color: var(--ink3); }
+@media (max-width: 1100px) { .kpi-row { grid-template-columns: repeat(3,1fr); } }
+@media (max-width: 620px) { .kpi-row { grid-template-columns: repeat(2,1fr); } }
 
-/* ── REPORT GRID (web two-column) ── */
-.report-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; align-items: start; }
-.report-grid .span-2 { grid-column: 1 / -1; }
-@media (max-width: 780px) { .report-grid { grid-template-columns: 1fr; } }
+/* ── GRID / SECTION ── */
+.grid-3 { display: grid; grid-template-columns: 1.6fr 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4,1fr); gap: 14px; margin-bottom: 14px; }
+@media (max-width: 1000px) { .grid-3, .grid-2, .grid-4 { grid-template-columns: 1fr; } }
+.section { background: var(--white); border: 1px solid var(--line); border-radius: var(--r-card); padding: 18px 18px 16px; box-shadow: var(--shadow-sm); }
+.sec-title { display: flex; align-items: center; gap: 9px; margin-bottom: 14px; }
+.sec-ico { width: 30px; height: 30px; border-radius: 9px; background: var(--circle); color: var(--blue); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.sec-ico svg { width: 15px; height: 15px; }
+.sec-h { font-size: 13px; font-weight: 800; color: var(--ink); letter-spacing: .01em; }
 
-/* ── SECTION ── */
-.section {
-  background: var(--white); border-radius: var(--r-card); padding: 24px 22px;
-  margin-bottom: 0; box-shadow: var(--shadow-sm); border: 1px solid var(--line);
-}
-.sec-title { margin-bottom: 18px; display: flex; align-items: center; gap: 12px; }
-.sec-ico {
-  width: 44px; height: 44px; border-radius: 13px; background: var(--circle);
-  display: flex; align-items: center; justify-content: center; color: var(--blue); flex-shrink: 0;
-}
+/* ── FUNNEL ── */
+.funnel-row { display: grid; grid-template-columns: 170px 1fr 60px; align-items: center; gap: 10px; margin-bottom: 11px; font-size: 12.5px; }
+.funnel-label { display: flex; align-items: center; gap: 8px; color: var(--ink2); font-weight: 700; }
+.funnel-label svg { color: var(--blue); flex-shrink: 0; width:15px; height:15px; }
+.funnel-label .fv { color: var(--ink); font-weight: 900; margin-left: auto; padding-right: 6px; }
+.funnel-track { height: 9px; border-radius: 5px; background: var(--ice2); overflow: hidden; border: 1px solid var(--line); }
+.funnel-fill { height: 100%; border-radius: 5px; background: linear-gradient(90deg, var(--blue-deep), var(--blue)); }
+.funnel-pct { text-align: right; color: var(--ink3); font-weight: 700; }
+.funnel-note { background: var(--ice2); border: 1px solid var(--line); border-radius: 12px; padding: 11px 13px; font-size: 12px; color: var(--ink2); margin-top: 10px; line-height: 1.5; }
+.funnel-note b { color: var(--blue); }
 
-/* ── CAMPAIGNS ── */
-.camp-item { display: flex; align-items: center; gap: 14px; padding: 16px 0; border-bottom: 1px solid var(--line); }
-.camp-item:first-child { padding-top: 2px; }
-.camp-item:last-child { border-bottom: none; padding-bottom: 2px; }
-.camp-ico { width: 48px; height: 48px; min-width: 48px; border-radius: 14px; background: var(--circle); display: flex; align-items: center; justify-content: center; color: var(--blue); }
-.camp-main { flex: 1; min-width: 0; }
-.camp-name { font-size: 14px; font-weight: 800; color: var(--ink); line-height: 1.3; }
-.camp-sub { font-size: 12px; font-weight: 700; color: var(--blue); margin-top: 2px; }
-.camp-nums { display: flex; gap: 22px; flex-shrink: 0; text-align: right; }
-.cn-l { font-size: 10px; color: var(--ink3); font-weight: 700; text-transform: uppercase; letter-spacing: .3px; margin-bottom: 3px; }
-.cn-v { font-size: 15px; font-weight: 900; color: var(--blue-deep); }
-.camp-spend { font-size: 13px; font-weight: 800; color: var(--ink2); margin-top: 3px; }
+/* ── CHARTS ── */
+.chart-head { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom: 6px; }
+.chart-total { text-align: right; }
+.chart-total .ct-l { font-size: 10px; color: var(--ink3); font-weight: 700; text-transform: uppercase; }
+.chart-total .ct-v { font-size: 17px; font-weight: 900; color: var(--blue-deep); }
+.no-data { color: var(--ink3); font-size: 12.5px; text-align: center; padding: 30px 0; font-weight: 600; }
 
-/* ── META RESUMO ── */
-.meta-row { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
-.meta-logo { width: 48px; height: 48px; border-radius: 14px; flex-shrink: 0; background: linear-gradient(135deg, #0668E1, #0090FF); display: flex; align-items: center; justify-content: center; color: white; box-shadow: 0 4px 14px rgba(6,104,225,.25); }
-.meta-info-label { font-size: 11px; color: var(--ink3); font-weight: 700; letter-spacing: .5px; text-transform: uppercase; }
-.meta-info-name  { font-size: 15px; font-weight: 900; color: var(--ink); }
-.resumo-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; background: var(--ice2); border-radius: 18px; padding: 20px 16px; border: 1px solid var(--line); }
-.rg-label { font-size: 10px; color: var(--ink3); margin-bottom: 6px; text-transform: uppercase; letter-spacing: .5px; font-weight: 700; }
-.rg-value { font-size: 17px; font-weight: 900; color: var(--blue-deep); }
+/* ── RANKING TABLE ── */
+table.rank { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+table.rank th { text-align: left; font-size: 10px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; color: var(--ink3); padding: 0 8px 8px; border-bottom: 1px solid var(--line); }
+table.rank td { padding: 10px 8px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+table.rank tr:last-child td { border-bottom: none; }
+.rank-num { width: 22px; height: 22px; border-radius: 7px; background: var(--circle); color: var(--blue); font-weight: 800; font-size: 11px; display: flex; align-items: center; justify-content: center; }
+.rank-camp { display: flex; align-items: center; gap: 9px; }
+.rank-camp-ico { width: 30px; height: 30px; border-radius: 9px; background: var(--circle2); color: var(--blue); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.rank-camp-ico svg { width: 14px; height: 14px; }
+.rank-camp-name { font-weight: 800; color: var(--ink); max-width: 190px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+td.num { font-variant-numeric: tabular-nums; font-weight: 700; color: var(--ink2); }
+td.trend { text-align: center; }
+.trend-ico.up { color: var(--red); } .trend-ico.down { color: var(--green); }
+.rank-more { text-align: center; margin-top: 10px; }
+.rank-more a { font-size: 12px; font-weight: 800; color: var(--blue); text-decoration: none; }
+.rank-more a:hover { text-decoration: underline; }
 
-/* ── TOP ADS ── */
-.ad-item { display: flex; align-items: center; gap: 12px; padding: 14px 0; border-bottom: 1px solid var(--line); }
+/* ── DONUT ── */
+.donut-wrap { display: flex; align-items: center; gap: 18px; }
+.donut-center { position: relative; }
+.donut-total { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+.donut-total .dt-l { font-size: 9px; color: var(--ink3); font-weight: 700; text-transform: uppercase; }
+.donut-total .dt-v { font-size: 15px; font-weight: 900; color: var(--blue-deep); }
+.legend { display: flex; flex-direction: column; gap: 9px; flex: 1; min-width: 0; }
+.legend-row { display: flex; align-items: center; gap: 8px; font-size: 12px; }
+.legend-dot { width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; }
+.legend-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--ink2); font-weight: 700; }
+.legend-pct { font-weight: 900; color: var(--ink); }
+
+/* ── ADS LIST ── */
+.ad-item { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--line); }
+.ad-item:first-child { padding-top: 2px; }
 .ad-item:last-child { border-bottom: none; padding-bottom: 2px; }
-.rank-badge { width: 32px; height: 32px; min-width: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 14px; flex-shrink: 0; }
-.rb-1 { background: linear-gradient(135deg, #FCD34D, #F59E0B); color: #7C3A00; box-shadow: 0 3px 10px rgba(245,158,11,.35); }
+.rank-badge { width: 26px; height: 26px; min-width: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 12px; flex-shrink: 0; }
+.rb-1 { background: linear-gradient(135deg, #FCD34D, #F59E0B); color: #7C3A00; }
 .rb-2 { background: linear-gradient(135deg, #D9DEE6, #AEB6C2); color: #34404F; }
 .rb-3 { background: linear-gradient(135deg, #E1A46A, #C57B36); color: white; }
-.ad-thumb { width: 56px; height: 56px; min-width: 56px; border-radius: 14px; object-fit: cover; background: var(--ice); border: 1px solid var(--line); }
-.ad-thumb-ph { width: 56px; height: 56px; min-width: 56px; border-radius: 14px; background: var(--circle2); display: flex; align-items: center; justify-content: center; color: var(--blue-soft); border: 1px solid var(--line); }
+.ad-thumb { width: 48px; height: 48px; min-width: 48px; border-radius: 12px; object-fit: cover; background: var(--ice); border: 1px solid var(--line); }
+.ad-thumb-ph { width: 48px; height: 48px; min-width: 48px; border-radius: 12px; background: var(--circle2); display: flex; align-items: center; justify-content: center; color: var(--blue-soft); border: 1px solid var(--line); }
+.ad-thumb-ph svg { width: 20px; height: 20px; }
 .ad-info { flex: 1; min-width: 0; }
-.ad-name { font-size: 14px; font-weight: 800; color: var(--ink); margin-bottom: 9px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.ad-metrics { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; }
-.am-l { font-size: 9.5px; color: var(--ink3); font-weight: 700; text-transform: uppercase; letter-spacing: .3px; margin-bottom: 3px; }
-.am-v { font-size: 14px; font-weight: 900; color: var(--blue-deep); }
-.top1-card { background: linear-gradient(135deg, #FFFBF0, #FFF8E8); border: 1.5px solid #FBE3AC; border-radius: 18px; padding: 14px 13px; margin-bottom: 4px; box-shadow: 0 4px 16px rgba(245,158,11,.08); position: relative; }
-.top1-seal { position: absolute; top: -9px; left: 14px; background: linear-gradient(135deg, #FCD34D, #F59E0B); color: #7C3A00; font-size: 8.5px; font-weight: 900; padding: 4px 10px; border-radius: var(--r-pill); box-shadow: 0 2px 8px rgba(245,158,11,.35); letter-spacing: .3px; display: inline-flex; align-items: center; gap: 4px; }
+.ad-name { font-size: 12.5px; font-weight: 800; color: var(--ink); margin-bottom: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ad-metrics { display: flex; gap: 16px; }
+.ad-metrics .am-l { font-size: 9px; color: var(--ink3); font-weight: 700; text-transform: uppercase; }
+.ad-metrics .am-v { font-size: 12.5px; font-weight: 900; color: var(--blue-deep); }
+.top1-seal { display:inline-flex; align-items:center; gap:4px; background: linear-gradient(135deg, #FCD34D, #F59E0B); color: #7C3A00; font-size: 9px; font-weight: 900; padding: 3px 9px; border-radius: 100px; margin-bottom: 8px; letter-spacing:.3px; }
 
-/* ── INSIGHTS ── */
-.ins-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 14px; }
-.ins-card { background: var(--ice2); border-radius: 18px; padding: 18px 16px; border: 1px solid var(--line); }
-.ins-ico { width: 44px; height: 44px; border-radius: 12px; background: var(--white); display: flex; align-items: center; justify-content: center; color: var(--blue); margin-bottom: 12px; box-shadow: var(--shadow-sm); }
-.ins-label { font-size: 10.5px; color: var(--ink3); font-weight: 700; text-transform: uppercase; letter-spacing: .5px; margin-bottom: 5px; }
-.ins-name { font-size: 12.5px; font-weight: 700; color: var(--ink2); margin-bottom: 9px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.ins-value { font-size: 21px; font-weight: 900; color: var(--blue); }
+/* ── AUDIENCE ── */
+.audience-grid { display: grid; grid-template-columns: .8fr 1.1fr 1.1fr; gap: 16px; align-items: start; }
+@media (max-width: 900px) { .audience-grid { grid-template-columns: 1fr; } }
+.gender-legend { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
+.age-bar-row { display: grid; grid-template-columns: 40px 1fr 34px; align-items: center; gap: 8px; font-size: 11.5px; margin-bottom: 8px; }
+.age-bar-track { height: 10px; border-radius: 5px; background: var(--ice2); overflow: hidden; }
+.age-bar-fill { height: 100%; border-radius: 5px; background: var(--blue); }
+.age-bar-pct { text-align: right; font-weight: 800; color: var(--ink2); }
+.place-row { display: flex; align-items: center; gap: 9px; font-size: 11.5px; margin-bottom: 10px; }
+.place-ico { width: 22px; height: 22px; border-radius: 7px; background: var(--circle); color: var(--blue); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.place-ico svg { width: 11px; height: 11px; }
+.place-name { flex: 1; color: var(--ink2); font-weight: 700; }
+.place-track { width: 90px; height: 8px; border-radius: 4px; background: var(--ice2); overflow: hidden; }
+.place-fill { height: 100%; background: var(--blue-soft); border-radius: 4px; }
+.place-pct { width: 42px; text-align: right; font-weight: 800; color: var(--ink); }
 
-/* ── DIVIDER ── */
-.section-divider { display: flex; align-items: center; gap: 10px; margin: 6px 0 4px; }
-.section-divider::before, .section-divider::after { content: ''; flex: 1; height: 1px; background: var(--line); }
-.section-divider svg { color: var(--blue-soft); }
-
-/* ── FOOTER ── */
-.dash-footer {
-  position: relative; overflow: hidden; border-radius: 22px; margin-top: 22px;
-  background: linear-gradient(135deg, #1168C8 0%, #0B386D 100%);
-  padding: 28px 26px 26px; text-align: center;
-  display: flex; align-items: center; justify-content: center; gap: 14px;
-}
-.foot-wave { position: absolute; left: 0; right: 0; bottom: 0; width: 100%; display: block; z-index: 0; }
-.foot-inner { position: relative; z-index: 2; display: flex; align-items: center; gap: 14px; }
-.foot-ico { width: 48px; height: 48px; border-radius: 50%; background: rgba(255,255,255,.16); display: inline-flex; align-items: center; justify-content: center; color: white; flex-shrink: 0; }
-.foot-tagline { color: white; font-size: 18px; font-weight: 800; font-style: italic; }
-.foot-tagline b { font-weight: 900; }
-.foot-meta { position: relative; z-index: 2; color: rgba(255,255,255,.72); font-size: 11px; font-weight: 600; letter-spacing: .4px; text-transform: uppercase; margin-left: auto; }
+/* ── INSIGHTS STRIP ── */
+.insights-strip { display: flex; align-items: stretch; background: var(--blue-deep); border-radius: 18px; margin-top: 16px; overflow-x: auto; }
+.is-head { display: flex; align-items: center; gap: 8px; padding: 16px 18px; color: white; font-weight: 900; font-size: 12px; white-space: nowrap; border-right: 1px solid rgba(255,255,255,.15); }
+.is-head svg { color: #FFD166; }
+.is-item { padding: 12px 18px; min-width: 150px; border-right: 1px solid rgba(255,255,255,.1); }
+.is-item:last-child { border-right: none; }
+.is-l { font-size: 9.5px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; color: #9FC3EE; margin-bottom: 6px; }
+.is-v { font-size: 13.5px; font-weight: 900; color: white; line-height: 1.25; }
+.is-v small { display:block; font-size: 10.5px; font-weight: 700; color: #BFE0FF; margin-top: 2px; }
 
 /* ── EXPORT ── */
-.export-wrap { max-width: 1120px; margin: 0 auto; padding: 0 22px 50px; }
+.export-wrap { max-width: 1360px; margin: 0 auto; padding: 0 22px 50px; }
 .btn-export {
   background: var(--navy); color: white; border: none; padding: 16px; border-radius: 16px;
   font-size: 14px; font-weight: 800; cursor: pointer; width: 100%;
-  box-shadow: 0 4px 18px rgba(14,42,87,.3); font-family: inherit; letter-spacing: .3px;
+  box-shadow: 0 4px 18px rgba(11,56,109,.3); font-family: inherit; letter-spacing: .3px;
   display: flex; align-items: center; justify-content: center; gap: 8px;
   transition: transform .15s, box-shadow .15s;
 }
-.btn-export:hover { transform: translateY(-1px); box-shadow: 0 6px 24px rgba(14,42,87,.4); }
+.btn-export:hover { transform: translateY(-1px); box-shadow: 0 6px 24px rgba(11,56,109,.4); }
 .btn-export:disabled { opacity: .5; cursor: default; transform: none; }
 
 /* ── STATES ── */
@@ -255,118 +271,100 @@ body {
 .spinner { width: 38px; height: 38px; border: 3px solid var(--ice); border-top-color: var(--blue); border-radius: 50%; animation: spin .75s linear infinite; margin: 0 auto 16px; }
 @keyframes spin { to { transform: rotate(360deg); } }
 .err-box { background: #FFF0F0; border: 1.5px solid #FCA5A5; border-radius: 14px; padding: 14px; color: #DC2626; font-size: 13px; margin: 14px 0; font-weight: 700; }
-.no-data { color: var(--ink3); font-size: 13px; text-align: center; padding: 16px 0; font-weight: 600; }
-
-.sec-pill { display:inline-flex; align-items:center; background: var(--blue); color:#fff; font-size:15px; font-weight:800; letter-spacing:.4px; text-transform:uppercase; padding:10px 18px; border-radius:100px; line-height:1; box-shadow:0 4px 12px rgba(17,104,200,.28); }
-.sales-grid { display:grid; grid-template-columns:repeat(6,1fr); gap:12px; }
-.stat-card { background:var(--ice2); border:1px solid var(--line); border-radius:18px; padding:18px 8px 16px; text-align:center; }
-.stat-ico { width:46px;height:46px;border-radius:50%;background:var(--circle);color:var(--blue);display:flex;align-items:center;justify-content:center;margin:0 auto 11px; }
-.stat-ico svg{ width:24px;height:24px; }
-.stat-label { font-size:10px;color:var(--ink3);font-weight:700;text-transform:uppercase;letter-spacing:.2px;margin-bottom:8px;line-height:1.2;min-height:24px;display:flex;align-items:center;justify-content:center; }
-.stat-value { font-size:17px;font-weight:900;color:var(--blue-deep);line-height:1; }
-.stat-card.hl { background:linear-gradient(135deg,#E9F1FF,#DBEAFC); border-color:#C5DCF8; }
-.stat-card.hl .stat-value{ color:var(--blue); }
-@media (max-width:900px){ .sales-grid{ grid-template-columns:repeat(3,1fr);} }
-@media (max-width:520px){ .sales-grid{ grid-template-columns:repeat(2,1fr);} .h-title{ font-size:38px; } }
 </style>
 </head>
 <body>
 
-<div class="setup-bar">
-  <label>Período:</label>
-  <select id="datePreset" onchange="reloadTab()">
-    <option value="this_month">Mês atual</option>
-    <option value="last_month">Mês anterior</option>
-    <option value="last_7d">Últimos 7 dias</option>
-    <option value="last_30d">Últimos 30 dias</option>
-    <option value="this_year">Este ano</option>
-  </select>
-  <button class="btn-connect" onclick="reloadTab()">Atualizar</button>
-  <button class="btn-connect btn-bulk" id="btnBulk" onclick="exportAllClients()">Baixar todos os clientes</button>
-</div>
+<div class="app-shell">
+  <aside class="sidebar">
+    <div class="side-mark">F</div>
+    <nav class="side-nav">
+      <button class="side-ico active" type="button" title="Dashboard" id="icGrid"></button>
+      <button class="side-ico" type="button" title="Desempenho" id="icBars"></button>
+      <button class="side-ico" type="button" title="Campanhas" id="icMega"></button>
+      <button class="side-ico" type="button" title="Público" id="icPeople"></button>
+      <button class="side-ico" type="button" title="Criativos" id="icImg"></button>
+      <button class="side-ico" type="button" title="Insights" id="icBolt"></button>
+    </nav>
+    <div class="side-bottom">
+      <button class="side-ico" type="button" title="Configurações" id="icGear"></button>
+      <button class="side-ico" type="button" title="Ajuda" id="icHelp"></button>
+      <div class="side-avatar">AF<span class="avatar-dot"></span></div>
+    </div>
+  </aside>
 
-<div class="tabs-wrap" id="tabsWrap"></div>
+  <div class="main">
+    <div class="setup-bar">
+      <label>Período:</label>
+      <select id="datePreset" onchange="reloadTab()">
+        <option value="this_month">Mês atual</option>
+        <option value="last_month">Mês anterior</option>
+        <option value="last_7d">Últimos 7 dias</option>
+        <option value="last_30d">Últimos 30 dias</option>
+        <option value="this_year">Este ano</option>
+      </select>
+      <button class="btn-connect" onclick="reloadTab()">Atualizar</button>
+      <button class="btn-connect btn-bulk" id="btnBulk" onclick="exportAllClients()">Baixar todos os clientes</button>
+    </div>
 
-<div class="page" id="dashPage">
-  <div class="state-box">
-    <div class="spinner"></div>
-    <p>Carregando dados…</p>
+    <div class="tabs-wrap" id="tabsWrap"></div>
+
+    <div class="page" id="dashPage">
+      <div class="state-box">
+        <div class="spinner"></div>
+        <p>Carregando dados…</p>
+      </div>
+    </div>
+
+    <div class="export-wrap" id="exportWrap">
+      <button class="btn-export" id="btnExport" onclick="exportImage()"> Exportar como imagem</button>
+    </div>
   </div>
-</div>
-
-<div class="export-wrap" id="exportWrap">
-  <button class="btn-export" id="btnExport" onclick="exportImage()"> Exportar como imagem</button>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
-/* ── BRAND ASSETS (base64) ── */
-
-/* ── INLINE SVG ICONS (outline, currentColor) ── */
+/* ── ICONS ── */
 const IC = {
-  browser:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 9h18"/><path d="M6 7h.01M8.5 7h.01"/></svg>',
-  bars:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4v16h16"/><path d="M8 18v-4M13 18v-8M18 18v-6"/></svg>',
+  grid:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="8" height="8" rx="2"/><rect x="13" y="3" width="8" height="8" rx="2"/><rect x="3" y="13" width="8" height="8" rx="2"/><rect x="13" y="13" width="8" height="8" rx="2"/></svg>',
+  bars:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4v16h16"/><path d="M8 18v-4M13 18v-8M18 18v-6"/></svg>',
+  mega:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11v2a1 1 0 0 0 1 1h2l6 4V6L6 10H4a1 1 0 0 0-1 1Z"/><path d="M16 8.5a4 4 0 0 1 0 7"/><path d="M6 14v4a1 1 0 0 0 1 1h1"/></svg>',
+  people:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.2"/><path d="M3.5 19a5.5 5.5 0 0 1 11 0"/><path d="M16 5.2a3.2 3.2 0 0 1 0 5.6"/><path d="M17.5 13.6A5.5 5.5 0 0 1 20.5 19"/></svg>',
+  img:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="8.5" cy="9.5" r="1.6"/><path d="M4 17l5-4 4 3 3-2 4 3"/></svg>',
+  bolt:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8Z"/></svg>',
+  gear:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1 1.55V21a2 2 0 1 1-4 0v-.09A1.7 1.7 0 0 0 9 19.4a1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.7 1.7 0 0 0 4.6 15a1.7 1.7 0 0 0-1.55-1H3a2 2 0 1 1 0-4h.09A1.7 1.7 0 0 0 4.6 9a1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.7 1.7 0 0 0 9 4.6a1.7 1.7 0 0 0 1-1.55V3a2 2 0 1 1 4 0v.09a1.7 1.7 0 0 0 1 1.55 1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.7 1.7 0 0 0 19.4 9a1.7 1.7 0 0 0 1.55 1H21a2 2 0 1 1 0 4h-.09a1.7 1.7 0 0 0-1.51 1Z"/></svg>',
+  help:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9.5"/><path d="M9.3 9a2.7 2.7 0 0 1 5.2 1c0 1.8-2.5 2-2.5 3.6"/><circle cx="12" cy="16.7" r=".2" fill="currentColor"/></svg>',
+  chat:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3h11A2.5 2.5 0 0 1 20 5.5v8A2.5 2.5 0 0 1 17.5 16H10l-5 4v-4H6.5A2.5 2.5 0 0 1 4 13.5v-8Z"/></svg>',
+  target:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.7"/><circle cx="12" cy="12" r="1.2" fill="currentColor"/></svg>',
   bag:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6.4 8.5h11.2l-.85 9.7a2 2 0 0 1-2 1.8H9.25a2 2 0 0 1-2-1.8L6.4 8.5Z"/><path d="M9 9.2V7.6a3 3 0 0 1 6 0v1.6"/></svg>',
-  tag:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3.6 12.4 11 5h6.4a1 1 0 0 1 1 1V12l-7.4 7.4a1.4 1.4 0 0 1-2 0l-5.4-5.4a1.4 1.4 0 0 1 0-1.6Z"/><circle cx="15" cy="9" r="1.3"/></svg>',
-  roas:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V4"/><path d="M4 20h16"/><path d="M7.5 15l3.5-4 3 2.5L19 8"/><path d="M15.5 8H19v3.5"/></svg>',
-  freq:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h3l2.5 7 5-14 2.5 7H21"/></svg>',
-  cpm:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg>',
-  cone:'<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M8 8a4 4 0 0 1 8 0"/><path d="M6.5 8h11"/><path d="M8 11l4 10 4-10"/><path d="M7 14.5h10"/></svg>',
-  bell:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>',
-  cal:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="3"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>',
-  caret:'<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>',
-  money:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M14.5 9.3C14.5 8 13.4 7.5 12 7.5s-2.5.6-2.5 1.8c0 2.6 5 1.3 5 3.9 0 1.2-1.1 1.8-2.5 1.8s-2.5-.6-2.5-1.9"/></svg>',
-  people:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.2"/><path d="M3.5 19a5.5 5.5 0 0 1 11 0"/><path d="M16 5.2a3.2 3.2 0 0 1 0 5.6"/><path d="M17.5 13.6A5.5 5.5 0 0 1 20.5 19"/></svg>',
-  eye:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12Z"/><circle cx="12" cy="12" r="3"/></svg>',
-  mega:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11v2a1 1 0 0 0 1 1h2l6 4V6L6 10H4a1 1 0 0 0-1 1Z"/><path d="M16 8.5a4 4 0 0 1 0 7"/><path d="M6 14v4a1 1 0 0 0 1 1h1"/></svg>',
-  target:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.7"/><circle cx="12" cy="12" r="1.2" fill="currentColor"/></svg>',
-  follow:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.3"/><path d="M3.5 19a5.5 5.5 0 0 1 11 0"/><path d="M18 8v6M15 11h6"/></svg>',
-  cart:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.4"/><circle cx="17" cy="20" r="1.4"/><path d="M2.5 3.5h2l2.2 11.2a1.5 1.5 0 0 0 1.5 1.2h8.1a1.5 1.5 0 0 0 1.5-1.2L21 7H6"/></svg>',
-  play:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M10 8.5l6 3.5-6 3.5V8.5Z" fill="currentColor" stroke="none"/></svg>',
-  infinity:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M7 8a4 4 0 1 0 0 8c2 0 3-1.5 5-4s3-4 5-4a4 4 0 0 1 0 8c-2 0-3-1.5-5-4S9 8 7 8Z"/></svg>',
-  trophy:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4h10v4a5 5 0 0 1-10 0V4Z"/><path d="M7 5H4v1a3 3 0 0 0 3 3M17 5h3v1a3 3 0 0 1-3 3"/><path d="M12 13v3M9 20h6M10 20l.5-4h3l.5 4"/></svg>',
-  bolt:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8Z"/></svg>',
   cursor:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3l6 18 2.5-7.5L21 11 5 3Z"/></svg>',
-  star:'<svg width="12" height="12" viewBox="0 0 24 24" fill="#7C3A00" stroke="none"><path d="M12 2l2.9 6.3 6.9.7-5.1 4.6 1.4 6.8L12 17.8 5.9 20.4l1.4-6.8L2.2 9l6.9-.7L12 2Z"/></svg>',
-  cam:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8a2 2 0 0 1 2-2h2l1.5-2h7L17 6h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8Z"/><circle cx="12" cy="12.5" r="3.3"/></svg>',
-  img:'<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="8.5" cy="9.5" r="1.6"/><path d="M4 17l5-4 4 3 3-2 4 3"/></svg>',
+  eye:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12Z"/><circle cx="12" cy="12" r="3"/></svg>',
+  money:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M14.5 9.3C14.5 8 13.4 7.5 12 7.5s-2.5.6-2.5 1.8c0 2.6 5 1.3 5 3.9 0 1.2-1.1 1.8-2.5 1.8s-2.5-.6-2.5-1.9"/></svg>',
+  cal:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="3"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>',
+  caret:'<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>',
+  check:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>',
+  meta:'<svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M14 8.5V7c0-.9.4-1.3 1.3-1.3H17V2.7h-2.5c-2.7 0-3.8 1.4-3.8 3.9v1.9H9v3h1.7V22H14v-10.5h2.4l.4-3H14Z"/></svg>',
+  insta:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor" stroke="none"/></svg>',
+  fb:'<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M14 8.5V7c0-.9.4-1.3 1.3-1.3H17V2.7h-2.5c-2.7 0-3.8 1.4-3.8 3.9v1.9H9v3h1.7V22H14v-10.5h2.4l.4-3H14Z"/></svg>',
+  trophy:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4h10v4a5 5 0 0 1-10 0V4Z"/><path d="M7 5H4v1a3 3 0 0 0 3 3M17 5h3v1a3 3 0 0 1-3 3"/><path d="M12 13v3M9 20h6M10 20l.5-4h3l.5 4"/></svg>',
+  arrowUp:'<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>',
+  arrowDown:'<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>',
+  img20:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="8.5" cy="9.5" r="1.6"/><path d="M4 17l5-4 4 3 3-2 4 3"/></svg>',
+  clock:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>',
+  cone:'<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M8 8a4 4 0 0 1 8 0"/><path d="M6.5 8h11"/><path d="M8 11l4 10 4-10"/><path d="M7 14.5h10"/></svg>',
 };
+['icGrid','icBars','icMega','icPeople','icImg','icBolt'].forEach((id,i)=>{});
+document.getElementById('icGrid').innerHTML = IC.grid;
+document.getElementById('icBars').innerHTML = IC.bars;
+document.getElementById('icMega').innerHTML = IC.mega;
+document.getElementById('icPeople').innerHTML = IC.people;
+document.getElementById('icImg').innerHTML = IC.img;
+document.getElementById('icBolt').innerHTML = IC.bolt;
+document.getElementById('icGear').innerHTML = IC.gear;
+document.getElementById('icHelp').innerHTML = IC.help;
 
-/* blobs SVG for header (pale blue) */
-const HDR_BLOBS = `<svg class="hdr-blobs" viewBox="0 0 460 216" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-  <g fill="#DCEBFB">
-    <ellipse cx="34" cy="24" rx="30" ry="20"/>
-    <ellipse cx="82" cy="60" rx="16" ry="12"/>
-    <ellipse cx="20" cy="80" rx="14" ry="18"/>
-    <ellipse cx="60" cy="14" rx="12" ry="9"/>
-  </g>
-  <g fill="#E7F1FD">
-    <ellipse cx="430" cy="30" rx="34" ry="24"/>
-    <ellipse cx="388" cy="70" rx="16" ry="12"/>
-  </g>
-</svg>`;
-
-/* decorative blobs for the whole web sheet corners (top-left + bottom) */
-const SHEET_BLOBS = `<svg class="sheet-blobs" viewBox="0 0 1120 1400" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-  <g fill="#DCEBFB" opacity="0.9">
-    <ellipse cx="20" cy="30" rx="70" ry="52"/>
-    <ellipse cx="110" cy="96" rx="34" ry="26"/>
-    <ellipse cx="6" cy="150" rx="30" ry="40"/>
-    <ellipse cx="88" cy="16" rx="26" ry="18"/>
-  </g>
-  <g fill="#E7F1FD">
-    <ellipse cx="1104" cy="40" rx="66" ry="46"/>
-    <ellipse cx="1030" cy="104" rx="30" ry="22"/>
-  </g>
-  <g fill="#DCEBFB" opacity="0.85">
-    <ellipse cx="60" cy="1388" rx="80" ry="54"/>
-    <ellipse cx="170" cy="1360" rx="34" ry="24"/>
-    <ellipse cx="1060" cy="1384" rx="76" ry="50"/>
-    <ellipse cx="960" cy="1360" rx="30" ry="22"/>
-  </g>
-</svg>`;
-
+/* ── ACCOUNTS ── */
 const ACCOUNTS = [
   { id: '689675477143515',   name: 'Codipi Odonto' },
   { id: '1470280518205603',  name: 'Oral Erechim' },
@@ -408,7 +406,12 @@ async function gql(path, params={}) {
   url.searchParams.set('path', path);
   for (const [k,v] of Object.entries(params)) url.searchParams.set(k,v);
   const r = await fetch(url);
-  const d = await r.json();
+  const raw = await r.text();
+  let d;
+  try { d = JSON.parse(raw); }
+  catch {
+    throw new Error(`ROTA_NAO_ENCONTRADA: a chamada para /api/meta não devolveu JSON (status ${r.status}). O Vercel respondeu com uma página HTML — provavelmente a função api/meta.js não foi encontrada nesse deploy. Confira em Deployments → (deploy atual) → Source se a pasta api/ foi enviada, e na aba Functions se "meta" aparece listada.`);
+  }
   if (d.error) throw new Error(d.error.message);
   return d;
 }
@@ -422,26 +425,87 @@ async function loadData(idx) {
     render(acc, cache[key]);
   } catch(e) { setError(e.message); }
 }
+
+/* previous-period window, used for the delta (▲/▼) badges on the KPI cards */
+function prevRange(preset) {
+  const day = 24*60*60*1000;
+  const fmt = d => d.toISOString().slice(0,10);
+  const now = new Date();
+  if (preset === 'last_7d') {
+    const until = new Date(now - day), since = new Date(until - 6*day);
+    return { since: fmt(new Date(since - 7*day)), until: fmt(new Date(since - day)) };
+  }
+  if (preset === 'last_30d') {
+    const until = new Date(now - day), since = new Date(until - 29*day);
+    return { since: fmt(new Date(since - 30*day)), until: fmt(new Date(since - day)) };
+  }
+  if (preset === 'this_month') {
+    const firstThis = new Date(now.getFullYear(), now.getMonth(), 1);
+    const prevLast = new Date(firstThis - day);
+    const prevFirst = new Date(prevLast.getFullYear(), prevLast.getMonth(), 1);
+    const untilDay = Math.min(now.getDate(), prevLast.getDate());
+    return { since: fmt(prevFirst), until: fmt(new Date(prevFirst.getFullYear(), prevFirst.getMonth(), untilDay)) };
+  }
+  if (preset === 'last_month') {
+    const firstThis = new Date(now.getFullYear(), now.getMonth(), 1);
+    const lastMonthLast = new Date(firstThis - day);
+    const lastMonthFirst = new Date(lastMonthLast.getFullYear(), lastMonthLast.getMonth(), 1);
+    const prevLast = new Date(lastMonthFirst - day);
+    const prevFirst = new Date(prevLast.getFullYear(), prevLast.getMonth(), 1);
+    return { since: fmt(prevFirst), until: fmt(prevLast) };
+  }
+  if (preset === 'this_year') {
+    return { since: fmt(new Date(now.getFullYear()-1,0,1)), until: fmt(new Date(now.getFullYear()-1, now.getMonth(), now.getDate())) };
+  }
+  return null;
+}
+
+const FIELDS = 'spend,reach,impressions,clicks,inline_link_clicks,ctr,cpm,cpc,frequency,actions,action_values';
+/* candidate action_types for "conversas iniciadas" — o Meta usa nomes diferentes conforme o canal
+   (WhatsApp / Messenger / Direct do Instagram); mantemos vários candidatos e usamos o primeiro que vier
+   preenchido. Vale conferir contra a documentação atual da Marketing API se os números baterem estranho. */
+const MSG_TYPES = [
+  'onsite_conversion.messaging_conversation_started_7d',
+  'onsite_conversion.total_messaging_connection',
+  'onsite_conversion.messaging_first_reply',
+];
+
 async function fetchAll(acc, preset) {
   const act = `act_${acc.id}`;
-  const totals = await gql(`${act}/insights`, { fields:'spend,reach,impressions,clicks,inline_link_clicks,cpm,ctr,cpc,frequency,actions,action_values,purchase_roas', date_preset:preset })
-    .catch(e => { throw new Error('[1/4 insights] ' + e.message); });
+  const pr = prevRange(preset);
+
+  const totals   = await gql(`${act}/insights`, { fields: FIELDS, date_preset: preset })
+    .catch(e => { throw new Error('[1/8 insights] ' + e.message); });
+  const prevTotals = pr
+    ? await gql(`${act}/insights`, { fields: FIELDS, time_range: JSON.stringify(pr) }).catch(() => ({data:[]}))
+    : { data: [] };
   const camps = await gql(`${act}/campaigns`, { fields: 'name,objective,effective_status', limit: 50 })
-    .catch(e => { throw new Error('[2/4 campaigns] ' + e.message); });
+    .catch(e => { throw new Error('[2/8 campaigns] ' + e.message); });
   const campIns = await gql(`${act}/insights`, {
-    level: 'campaign',
-    fields: 'campaign_id,campaign_name,spend,reach,impressions,clicks,inline_link_clicks,cpm,ctr,cpc,frequency,actions,action_values,purchase_roas',
-    date_preset: preset, limit: 30
-  }).catch(e => { throw new Error('[3/4 campaign insights] ' + e.message); });
+    level: 'campaign', fields: `campaign_id,campaign_name,${FIELDS}`, date_preset: preset, limit: 30
+  }).catch(e => { throw new Error('[3/8 campaign insights] ' + e.message); });
   const adsIns = await gql(`${act}/insights`, {
-    level:'ad', fields:'ad_id,ad_name,spend,reach,impressions,clicks', date_preset:preset, limit:20
-  }).catch(e => { throw new Error('[4/4 ad insights] ' + e.message); });
+    level:'ad', fields:'ad_id,ad_name,spend,reach,impressions,clicks,actions', date_preset:preset, limit:20
+  }).catch(e => { throw new Error('[4/8 ad insights] ' + e.message); });
+  const daily = await gql(`${act}/insights`, {
+    fields:'spend,actions', time_increment:1, date_preset:preset, limit:90
+  }).catch(() => ({data:[]}));
+  const genderAge = await gql(`${act}/insights`, {
+    fields:'reach', breakdowns:'age,gender', date_preset:preset, limit:100
+  }).catch(() => ({data:[]}));
+  const placements = await gql(`${act}/insights`, {
+    fields:'impressions', breakdowns:'publisher_platform,platform_position', date_preset:preset, limit:50
+  }).catch(() => ({data:[]}));
+  const hourly = await gql(`${act}/insights`, {
+    fields:'actions', breakdowns:'hourly_stats_aggregated_by_advertiser_time_zone', date_preset:preset, limit:48
+  }).catch(() => ({data:[]}));
 
   const campInsMap = {};
   (campIns.data||[]).forEach(c => { campInsMap[c.campaign_id] = c; });
   const campaigns = (camps.data||[])
     .map(c => ({ ...c, _ins: campInsMap[c.id] || null }))
     .filter(c => Number(c._ins?.impressions||0) > 1);
+
   const rawAds = (adsIns.data||[])
     .filter(a => Number(a.impressions||0) > 1)
     .sort((a,b) => Number(b.reach||0) - Number(a.reach||0))
@@ -452,11 +516,21 @@ async function fetchAll(acc, preset) {
       return { ...ad, thumb: d.creative?.thumbnail_url || d.creative?.image_url || null };
     } catch { return { ...ad, thumb:null }; }
   }));
-  return { summary: totals.data?.[0]||{}, campaigns, topAds };
+
+  return {
+    summary: totals.data?.[0]||{},
+    prevSummary: prevTotals.data?.[0]||null,
+    campaigns, topAds,
+    daily: daily.data||[],
+    genderAge: genderAge.data||[],
+    placements: placements.data||[],
+    hourly: hourly.data||[],
+  };
 }
 
 const N   = n => n ? Number(n).toLocaleString('pt-BR') : '0';
 const BRL = n => n ? Number(n).toLocaleString('pt-BR',{style:'currency',currency:'BRL'}) : 'R$ 0,00';
+const av  = (arr,types) => { if(!Array.isArray(arr)) return 0; for(const t of types){ const f=arr.find(a=>a.action_type===t); if(f) return Number(f.value)||0; } return 0; };
 
 function dateLabel() {
   const p = document.getElementById('datePreset').value;
@@ -466,246 +540,368 @@ function dateLabel() {
            last_7d:'Últimos 7 dias', last_30d:'Últimos 30 dias',
            this_year:`Janeiro a ${mo} de ${yr}` }[p]||p;
 }
-function periodShort() {
-  const p = document.getElementById('datePreset').value;
-  const d = new Date();
-  return { this_month:`01–${d.getDate()}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`,
-           last_month:'Mês anterior', last_7d:'Últ. 7 dias',
-           last_30d:'Últ. 30 dias', this_year:String(d.getFullYear()) }[p]||p;
-}
-function isDeliveryCampaign(name='', obj='') {
-  const t = (name+obj).toUpperCase();
-  return t.includes('IFOOD') || t.includes('DELIVERY') || t.includes('VENDA') || t.includes('CONVERSÃO') || t.includes('CONVERSAO');
-}
-function campIcon(name='', obj='') {
-  const t = (name+obj).toUpperCase();
-  if (t.includes('VIDEO')||t.includes('VÍDEO')||t.includes('REEL')) return IC.play;
-  if (t.includes('SEGUIDOR')||t.includes('FOLLOW')||t.includes('PERFIL')) return IC.follow;
-  if (isDeliveryCampaign(name, obj)) return IC.cart;
-  if (t.includes('ALCAN')||t.includes('REACH')||t.includes('TEMÁTIC')||t.includes('TEMATIC')) return IC.target;
-  return IC.mega;
-}
+function shortDate(iso) { const [y,m,d] = iso.split('-'); return `${d}/${m}`; }
 
 function setLoading(name) {
   document.getElementById('dashPage').innerHTML =
     `<div class="state-box"><div class="spinner"></div><p>Carregando dados de<br><strong>${name}</strong>…</p></div>`;
 }
 function setError(msg) {
+  const isRouteIssue = /ROTA_NAO_ENCONTRADA/.test(msg);
   const isTokenIssue = /cannot parse access token|invalid oauth access token|não configurad|espaços/i.test(msg);
-  const hint = isTokenIssue
+  const hint = isRouteIssue
+    ? 'Isso não é problema de token — é a função <code>/api/meta</code> não existindo nesse deploy. No Vercel, confira: (1) Deployments → deploy atual → aba Source, a pasta <code>api/</code> precisa aparecer junto com o <code>index.html</code>; (2) aba Functions do mesmo deploy, precisa listar <code>meta</code>; (3) Project Settings → General → Root Directory está apontando pra pasta certa (a que contém <code>index.html</code> e <code>api/</code> lado a lado).'
+    : isTokenIssue
     ? 'O valor de <code>TOKEN_META</code> no Vercel parece inválido. Gere um novo token de sistema (long-lived) em Business Settings → System Users, cole-o na variável <code>TOKEN_META</code> (Project Settings → Environment Variables) sem aspas ou espaços extras, e faça um novo deploy.'
     : 'Verifique a variável <code>TOKEN_META</code> no Vercel e a permissão <code>ads_read</code>.';
   document.getElementById('dashPage').innerHTML =
-    `<div class="state-box"><div class="state-ico">${IC.bolt}</div>
-     <div class="err-box">${msg}</div>
+    `<div class="state-box"><div class="state-ico">${IC.cone}</div>
+     <div class="err-box">${msg.replace('ROTA_NAO_ENCONTRADA: ','')}</div>
      <p style="font-size:12px;font-weight:600">${hint}</p></div>`;
 }
-
-const RB = ['rb-1','rb-2','rb-3'];
 
 function render(acc, data) {
   document.getElementById('dashPage').innerHTML = buildReport(acc, data);
 }
 
-function buildReport(acc, {summary, campaigns, topAds}) {
-  const best   = topAds[0]||null;
-  const topClk = [...topAds].sort((a,b)=>Number(b.clicks||0)-Number(a.clicks||0))[0];
-  const topRch = [...topAds].sort((a,b)=>Number(b.reach||0)-Number(a.reach||0))[0];
-  const topImp = [...topAds].sort((a,b)=>Number(b.impressions||0)-Number(a.impressions||0))[0];
+/* ── helpers: deltas, objective, funnel insight ── */
+function pctDelta(cur, prev) {
+  if (!prev) return null;
+  const c = Number(cur)||0, p = Number(prev)||0;
+  if (!p) return null;
+  return ((c - p) / p) * 100;
+}
+function deltaBadge(pct, goodIsUp=true) {
+  if (pct === null || !isFinite(pct)) return '<span class="kpi-extra">sem período anterior</span>';
+  const up = pct >= 0;
+  const good = goodIsUp ? up : !up;
+  return `<span class="delta ${good?'good':'bad'}">${up?IC.arrowUp:IC.arrowDown} ${Math.abs(pct).toFixed(1)}%</span>`;
+}
+function objectiveInfo(campaigns) {
+  const counts = {};
+  campaigns.forEach(c => { counts[c.objective] = (counts[c.objective]||0)+1; });
+  const top = Object.entries(counts).sort((a,b)=>b[1]-a[1])[0];
+  const obj = top ? top[0] : '';
+  const MAP = {
+    OUTCOME_ENGAGEMENT:['gerar mensagens',IC.chat], MESSAGES:['gerar mensagens',IC.chat],
+    OUTCOME_LEADS:['gerar leads',IC.target], LEAD_GENERATION:['gerar leads',IC.target],
+    OUTCOME_SALES:['gerar vendas',IC.bag], CONVERSIONS:['gerar vendas',IC.bag],
+    OUTCOME_TRAFFIC:['gerar tráfego',IC.cursor], LINK_CLICKS:['gerar tráfego',IC.cursor],
+    OUTCOME_AWARENESS:['gerar reconhecimento',IC.eye], BRAND_AWARENESS:['gerar reconhecimento',IC.eye], REACH:['gerar alcance',IC.eye],
+  };
+  return MAP[obj] || ['performance', IC.bolt];
+}
 
-  const campsHtml = campaigns.length === 0
-    ? '<p class="no-data">Nenhuma campanha veiculou no período.</p>'
-    : campaigns.map(c => {
-        const ins = c._ins||{};
-        return `<div class="camp-item">
-          <div class="camp-ico">${campIcon(c.name, c.objective||'')}</div>
-          <div class="camp-main">
-            <div class="camp-name">${c.name}</div>
-            <div class="camp-spend">${BRL(ins.spend)} investido</div>
-          </div>
-          <div class="camp-nums">
-            <div><div class="cn-l">Alcance</div><div class="cn-v">${N(ins.reach)}</div></div>
-            <div><div class="cn-l">Impr.</div><div class="cn-v">${N(ins.impressions)}</div></div>
-          </div>
-        </div>`;
-      }).join('');
+/* ── charts (hand-built SVG, no external chart lib) ── */
+function lineChartSVG(points, { color = '#1168C8', money = false } = {}) {
+  if (!points.length) return '<p class="no-data">Sem dados no período.</p>';
+  const width = 400, height = 168, pad = { l: 34, r: 8, t: 10, b: 22 };
+  const w = width - pad.l - pad.r, h = height - pad.t - pad.b;
+  const max = Math.max(...points.map(p => p.v), 1);
+  const stepX = points.length > 1 ? w / (points.length - 1) : 0;
+  const x = i => pad.l + i * stepX;
+  const y = v => pad.t + h - (v / max) * h;
+  const path = points.map((p,i) => `${i===0?'M':'L'} ${x(i).toFixed(1)} ${y(p.v).toFixed(1)}`).join(' ');
+  const area = `${path} L ${x(points.length-1).toFixed(1)} ${(pad.t+h).toFixed(1)} L ${x(0).toFixed(1)} ${(pad.t+h).toFixed(1)} Z`;
+  const gid = 'lg' + Math.random().toString(36).slice(2,8);
+  const gridLines = [0,0.5,1].map(f => {
+    const gy = pad.t + h - f*h;
+    const val = money ? BRL(max*f) : N(Math.round(max*f));
+    return `<line x1="${pad.l}" y1="${gy.toFixed(1)}" x2="${width-pad.r}" y2="${gy.toFixed(1)}" stroke="#E4EEF9" stroke-width="1"/><text x="0" y="${(gy+3).toFixed(1)}" font-size="8.5" fill="#7A8A99" font-family="Montserrat">${val}</text>`;
+  }).join('');
+  const everyN = Math.max(1, Math.ceil(points.length/6));
+  const xLabels = points.map((p,i)=>({p,i})).filter(o => o.i % everyN === 0)
+    .map(o => `<text x="${x(o.i).toFixed(1)}" y="${height-4}" font-size="8.5" fill="#7A8A99" text-anchor="middle" font-family="Montserrat">${o.p.label}</text>`).join('');
+  const lastX = x(points.length-1), lastY = y(points[points.length-1].v);
+  return `<svg viewBox="0 0 ${width} ${height}" width="100%" height="${height}">
+    <defs><linearGradient id="${gid}" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="${color}" stop-opacity="0.25"/><stop offset="100%" stop-color="${color}" stop-opacity="0"/>
+    </linearGradient></defs>
+    ${gridLines}
+    <path d="${area}" fill="url(#${gid})" stroke="none"/>
+    <path d="${path}" fill="none" stroke="${color}" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/>
+    <circle cx="${lastX.toFixed(1)}" cy="${lastY.toFixed(1)}" r="3.6" fill="${color}" stroke="white" stroke-width="1.8"/>
+    ${xLabels}
+  </svg>`;
+}
+function donutSVG(segments, size=120, stroke=22) {
+  const r = (size - stroke)/2, c = 2*Math.PI*r;
+  let offset = 0;
+  const circles = segments.map(s => {
+    const len = Math.max((s.pct/100)*c, 0);
+    const el = `<circle cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke="${s.color}" stroke-width="${stroke}" stroke-dasharray="${len.toFixed(1)} ${(c-len).toFixed(1)}" stroke-dashoffset="${(-offset).toFixed(1)}" transform="rotate(-90 ${size/2} ${size/2})"/>`;
+    offset += len;
+    return el;
+  }).join('');
+  return `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">${circles}</svg>`;
+}
 
-  const adMetrics = ad => `<div class="ad-metrics">
-      <div><div class="am-l">Alcance</div><div class="am-v">${N(ad.reach)}</div></div>
-      <div><div class="am-l">Impressões</div><div class="am-v">${N(ad.impressions)}</div></div>
-      <div><div class="am-l">Cliques</div><div class="am-v">${N(ad.clicks)}</div></div>
+function campIcon(name='', obj='') {
+  const t = (name+obj).toUpperCase();
+  if (t.includes('WHATSAPP')||t.includes('MENSAGE')||t.includes('MESSAGE')) return IC.chat;
+  if (t.includes('VENDA')||t.includes('CONVERS')) return IC.bag;
+  if (t.includes('LEAD')) return IC.target;
+  if (t.includes('ALCAN')||t.includes('REACH')) return IC.eye;
+  return IC.mega;
+}
+
+function buildReport(acc, { summary, prevSummary, campaigns, topAds, daily, genderAge, placements, hourly }) {
+  const [objLabel, objIcon] = objectiveInfo(campaigns);
+
+  const linkClicks = Number(summary.inline_link_clicks || av(summary.actions,['link_click']) || 0);
+  const conversas   = av(summary.actions, MSG_TYPES);
+  const prevConversas = prevSummary ? av(prevSummary.actions, MSG_TYPES) : null;
+  const custoConv   = conversas ? Number(summary.spend||0)/conversas : 0;
+  const prevCustoConv = (prevSummary && prevConversas) ? Number(prevSummary.spend||0)/prevConversas : null;
+  const taxaConversao = linkClicks ? (conversas/linkClicks*100) : 0;
+  const ctrLink = summary.impressions ? (linkClicks/Number(summary.impressions)*100) : 0;
+
+  /* ── KPI row ── */
+  const kpi = (icon,label,value,extraHtml) => `<div class="kpi-card">
+      <div class="kpi-top"><div class="kpi-ico">${icon}</div><div class="kpi-label">${label}</div></div>
+      <div class="kpi-value">${value}</div>
+      <div class="kpi-foot">${extraHtml||''}</div>
     </div>`;
-  const thumb = ad => ad.thumb
-    ? `<img class="ad-thumb" src="${ad.thumb}" crossorigin="anonymous" alt="" onerror="this.outerHTML='<div class=ad-thumb-ph>${IC.img.replace(/"/g,'&quot;')}</div>'">`
-    : `<div class="ad-thumb-ph">${IC.img}</div>`;
+  const kpiRow = [
+    kpi(IC.money,'Investimento', BRL(summary.spend), deltaBadge(pctDelta(summary.spend, prevSummary?.spend), false)),
+    kpi(IC.people,'Alcance', N(summary.reach), deltaBadge(pctDelta(summary.reach, prevSummary?.reach), true)),
+    kpi(IC.eye,'Impressões', N(summary.impressions), deltaBadge(pctDelta(summary.impressions, prevSummary?.impressions), true)),
+    kpi(IC.cursor,'Cliques no link', N(linkClicks), `<span class="kpi-extra">CTR (link) ${ctrLink.toFixed(2)}%</span>`),
+    kpi(IC.chat,'Conversas iniciadas', N(conversas), `${deltaBadge(pctDelta(conversas, prevConversas), true)}<span class="kpi-extra">Taxa de conversão ${taxaConversao.toFixed(1)}%</span>`),
+    kpi(IC.money,'Custo por conversa', BRL(custoConv), `${deltaBadge(pctDelta(custoConv, prevCustoConv), false)}<span class="kpi-extra">Média anterior: ${prevCustoConv?BRL(prevCustoConv):'—'}</span>`),
+  ].join('');
 
-  const top1Html = topAds[0] ? `
-    <div class="top1-card">
-      <div class="top1-seal">${IC.star} MELHOR DESEMPENHO</div>
-      <div class="ad-item" style="padding:8px 0 0;border:none">
-        <div class="rank-badge rb-1">1</div>
-        ${thumb(topAds[0])}
-        <div class="ad-info">
-          <div class="ad-name" title="${topAds[0].ad_name}">${topAds[0].ad_name}</div>
-          ${adMetrics(topAds[0])}
+  /* ── funnel ── */
+  const reach = Number(summary.reach||0);
+  const funnelSteps = [
+    { label:'Alcance', icon:IC.people, value: reach },
+    { label:'Cliques no link', icon:IC.cursor, value: linkClicks },
+    { label:'Conversas iniciadas', icon:IC.chat, value: conversas },
+  ];
+  let biggestDropIdx = 1, biggestDrop = -1;
+  for (let i=1;i<funnelSteps.length;i++){
+    const prevV = funnelSteps[i-1].value || 1;
+    const drop = 1 - (funnelSteps[i].value/prevV);
+    if (drop > biggestDrop) { biggestDrop = drop; biggestDropIdx = i; }
+  }
+  const funnelHtml = funnelSteps.map(s => {
+    const pct = reach ? (s.value/reach*100) : 0;
+    const barPct = reach ? Math.max(pct,1.5) : 0;
+    return `<div class="funnel-row">
+      <div class="funnel-label">${s.icon}<span>${s.label}</span><span class="fv">${N(s.value)}</span></div>
+      <div class="funnel-track"><div class="funnel-fill" style="width:${barPct.toFixed(2)}%"></div></div>
+      <div class="funnel-pct">${pct.toFixed(2)}%</div>
+    </div>`;
+  }).join('');
+  const dropLabels = `${funnelSteps[biggestDropIdx-1].label} → ${funnelSteps[biggestDropIdx].label}`;
+
+  /* ── daily series → charts ── */
+  const dailyPoints = daily.map(d => ({ label: shortDate(d.date_start), v: Number(d.spend||0), conv: av(d.actions, MSG_TYPES) }));
+  const msgPoints  = dailyPoints.map(p => ({ label: p.label, v: p.conv }));
+  const costPoints = dailyPoints.map(p => ({ label: p.label, v: p.conv ? p.v/p.conv : 0 }));
+
+  /* ── ranking de campanhas ── */
+  const campRows = campaigns.map(c => {
+    const ins = c._ins || {};
+    const conv = av(ins.actions, MSG_TYPES);
+    const cc = conv ? Number(ins.spend||0)/conv : Infinity;
+    return { ...c, ins, conv, cc };
+  }).sort((a,b) => Number(b.ins.spend||0) - Number(a.ins.spend||0));
+  const finiteCosts = campRows.filter(c=>isFinite(c.cc)).map(c=>c.cc);
+  const avgCC = finiteCosts.length ? finiteCosts.reduce((a,b)=>a+b,0)/finiteCosts.length : 0;
+  const rankRows = campRows.slice(0,6).map((c,i) => `<tr>
+      <td><div class="rank-num">${i+1}</div></td>
+      <td><div class="rank-camp"><div class="rank-camp-ico">${campIcon(c.name,c.objective)}</div><div class="rank-camp-name" title="${c.name}">${c.name}</div></div></td>
+      <td class="num">${BRL(c.ins.spend)}</td>
+      <td class="num">${N(c.ins.reach)}</td>
+      <td class="num">${N(c.ins.clicks)}</td>
+      <td class="num">${N(c.conv)}</td>
+      <td class="num">${isFinite(c.cc)?BRL(c.cc):'—'}</td>
+      <td class="trend">${isFinite(c.cc) && avgCC ? (c.cc>avgCC ? `<span class="trend-ico up">${IC.arrowUp}</span>` : `<span class="trend-ico down">${IC.arrowDown}</span>`) : ''}</td>
+    </tr>`).join('');
+  const rankTable = campRows.length===0 ? '<p class="no-data">Nenhuma campanha veiculou no período.</p>' : `
+    <div style="overflow-x:auto"><table class="rank">
+      <thead><tr><th>#</th><th>Campanha</th><th>Investimento</th><th>Alcance</th><th>Cliques</th><th>Conversas</th><th>Custo/conv.</th><th></th></tr></thead>
+      <tbody>${rankRows}</tbody>
+    </table></div>
+    ${campRows.length>6 ? `<div class="rank-more"><a href="#">Ver todas as campanhas →</a></div>` : ''}`;
+
+  /* ── donut investimento por campanha ── */
+  const COLORS = ['#0B386D','#1168C8','#3DA0E6','#8FC7EF','#C9E1F5'];
+  const totalSpend = campRows.reduce((s,c)=>s+Number(c.ins.spend||0),0) || 1;
+  const top4 = campRows.slice(0,4);
+  const restSpend = campRows.slice(4).reduce((s,c)=>s+Number(c.ins.spend||0),0);
+  const donutData = top4.map((c,i)=>({ name:c.name, pct: Number(c.ins.spend||0)/totalSpend*100, color: COLORS[i] }));
+  if (restSpend>0) donutData.push({ name:'Outras', pct: restSpend/totalSpend*100, color: COLORS[4] });
+  const donutLegend = donutData.map(d => `<div class="legend-row"><span class="legend-dot" style="background:${d.color}"></span><span class="legend-name" title="${d.name}">${d.name}</span><span class="legend-pct">${d.pct.toFixed(1)}%</span></div>`).join('');
+
+  /* ── melhores anúncios ── */
+  const adsWithConv = topAds.map(a => ({ ...a, conv: av(a.actions, MSG_TYPES) }));
+  const thumb = ad => ad.thumb
+    ? `<img class="ad-thumb" src="${ad.thumb}" crossorigin="anonymous" alt="" onerror="this.outerHTML='<div class=ad-thumb-ph>${IC.img20.replace(/"/g,'&quot;')}</div>'">`
+    : `<div class="ad-thumb-ph">${IC.img20}</div>`;
+  const adsHtml = adsWithConv.length===0 ? '<p class="no-data">Sem dados de anúncios no período.</p>' : adsWithConv.map((ad,i) => `
+    <div class="ad-item">
+      ${i===0?`<div><div class="top1-seal">★ MELHOR DESEMPENHO</div></div>`:''}
+      <div class="rank-badge ${['rb-1','rb-2','rb-3'][i]||'rb-3'}">${i+1}</div>
+      ${thumb(ad)}
+      <div class="ad-info">
+        <div class="ad-name" title="${ad.ad_name}">${ad.ad_name}</div>
+        <div class="ad-metrics">
+          <div><div class="am-l">Conversas</div><div class="am-v">${N(ad.conv)}</div></div>
+          <div><div class="am-l">Custo/conv.</div><div class="am-v">${ad.conv?BRL(Number(ad.spend)/ad.conv):'—'}</div></div>
         </div>
       </div>
-    </div>` : '';
+    </div>`).join('');
 
-  const otherAdsHtml = topAds.slice(1).map((ad,i) => `
-      <div class="ad-item">
-        <div class="rank-badge ${RB[i+1]}">${i+2}</div>
-        ${thumb(ad)}
-        <div class="ad-info">
-          <div class="ad-name" title="${ad.ad_name}">${ad.ad_name}</div>
-          ${adMetrics(ad)}
-        </div>
-      </div>`).join('');
+  /* ── perfil do público ── */
+  const genderTotals = { male:0, female:0, other:0 };
+  genderAge.forEach(r => {
+    const v = Number(r.reach||0);
+    if (r.gender==='male') genderTotals.male += v;
+    else if (r.gender==='female') genderTotals.female += v;
+    else genderTotals.other += v;
+  });
+  const genderSum = genderTotals.male + genderTotals.female + genderTotals.other || 1;
+  const mPct = genderTotals.male/genderSum*100, fPct = genderTotals.female/genderSum*100;
+  const genderDonut = donutSVG([
+    { pct: fPct, color: '#0B386D' },
+    { pct: mPct, color: '#3DA0E6' },
+  ].filter(s=>s.pct>0), 120, 22);
 
-  const adsHtml = topAds.length === 0
-    ? '<p class="no-data">Sem dados de anúncios no período.</p>'
-    : top1Html + (otherAdsHtml ? `<div class="section-divider">${IC.target}</div>${otherAdsHtml}` : '');
+  const AGE_BUCKETS = ['13-17','18-24','25-34','35-44','45-54','55+'];
+  const ageTotals = {}; AGE_BUCKETS.forEach(b=>ageTotals[b]=0);
+  genderAge.forEach(r => {
+    const b = (r.age==='55-64'||r.age==='65+') ? '55+' : r.age;
+    if (ageTotals[b] !== undefined) ageTotals[b] += Number(r.reach||0);
+  });
+  const ageSum = Object.values(ageTotals).reduce((a,b)=>a+b,0) || 1;
+  const ageBars = AGE_BUCKETS.map(b => {
+    const pct = ageTotals[b]/ageSum*100;
+    return `<div class="age-bar-row"><span>${b}</span><div class="age-bar-track"><div class="age-bar-fill" style="width:${Math.max(pct,1).toFixed(1)}%"></div></div><span class="age-bar-pct">${pct.toFixed(0)}%</span></div>`;
+  }).join('');
 
-  const insCards = [
-    {ico:IC.trophy, label:'Melhor anúncio',        name:best?.ad_name||'—',    value:BRL(best?.spend)},
-    {ico:IC.cursor, label:'Maior vol. de cliques', name:topClk?.ad_name||'—',  value:`${N(topClk?.clicks)} cliques`},
-    {ico:IC.people, label:'Maior alcance',         name:topRch?.ad_name||'—',  value:`${N(topRch?.reach)} pessoas`},
-    {ico:IC.eye,    label:'Mais impressões',       name:topImp?.ad_name||'—',  value:`${N(topImp?.impressions)} imp.`},
-  ].map(c=>`<div class="ins-card">
-    <div class="ins-ico">${c.ico}</div>
-    <div class="ins-label">${c.label}</div>
-    <div class="ins-name" title="${c.name}">${c.name}</div>
-    <div class="ins-value">${c.value}</div>
-  </div>`).join('');
+  const PLACE_LABEL = {
+    'instagram|feed':'Feed do Instagram','instagram|story':'Stories do Instagram','instagram|reels':'Reels do Instagram',
+    'facebook|feed':'Feed do Facebook','facebook|story':'Stories do Facebook','facebook|video_feeds':'Vídeos do Facebook',
+    'audience_network|classic':'Audience Network','messenger|messenger_home':'Messenger',
+  };
+  const placeTotals = {};
+  placements.forEach(r => {
+    const key = `${r.publisher_platform}|${r.platform_position}`;
+    placeTotals[key] = (placeTotals[key]||0) + Number(r.impressions||0);
+  });
+  const placeSum = Object.values(placeTotals).reduce((a,b)=>a+b,0) || 1;
+  const placeTop = Object.entries(placeTotals).sort((a,b)=>b[1]-a[1]).slice(0,4);
+  const placeHtml = placeTop.length===0 ? '<p class="no-data">Sem dados de posicionamento.</p>' : placeTop.map(([key,val]) => {
+    const pct = val/placeSum*100;
+    const label = PLACE_LABEL[key] || key.replace('|',' · ');
+    const isInsta = key.startsWith('instagram');
+    return `<div class="place-row"><div class="place-ico">${isInsta?IC.insta:IC.fb}</div><span class="place-name">${label}</span><div class="place-track"><div class="place-fill" style="width:${pct.toFixed(1)}%"></div></div><span class="place-pct">${pct.toFixed(1)}%</span></div>`;
+  }).join('');
 
-  const AP = ['omni_purchase','purchase','offsite_conversion.fb_pixel_purchase','onsite_web_purchase'];
-  const av = (arr,types)=>{ if(!Array.isArray(arr)) return 0; for(const t of types){ const f=arr.find(a=>a.action_type===t); if(f) return Number(f.value)||0; } return 0; };
+  /* ── insights strip ── */
+  const withConv = campRows.filter(c=>c.conv>0);
+  const bestCamp = [...withConv].sort((a,b)=>a.cc-b.cc)[0];
+  const mostMsgCamp = [...campRows].sort((a,b)=>b.conv-a.conv)[0];
+  const ctrOf = c => Number(c.ins.impressions) ? Number(c.ins.inline_link_clicks||c.ins.clicks||0)/Number(c.ins.impressions)*100 : 0;
+  const bestCtrCamp = [...campRows].sort((a,b)=>ctrOf(b)-ctrOf(a))[0];
 
-  // Vendas/Delivery: métricas isoladas apenas das campanhas de vendas/delivery (não do total da conta)
-  const deliveryCampaigns = campaigns.filter(c => c._ins && isDeliveryCampaign(c.name, c.objective||''));
-  const sumNum   = field => deliveryCampaigns.reduce((s,c)=> s + (Number(c._ins[field])||0), 0);
-  const sumClicks = deliveryCampaigns.reduce((s,c)=> s + (Number(c._ins.clicks)||0), 0);
-  const sumAction = (key,types) => deliveryCampaigns.reduce((s,c)=> s + av(c._ins[key], types), 0);
+  const hourTotals = {};
+  hourly.forEach(r => {
+    const bucket = (r.hourly_stats_aggregated_by_advertiser_time_zone||'').slice(0,2);
+    hourTotals[bucket] = (hourTotals[bucket]||0) + av(r.actions, MSG_TYPES);
+  });
+  const hourEntries = Object.entries(hourTotals).filter(([,v])=>v>0).sort((a,b)=>b[1]-a[1]);
+  const peakHourLabel = hourEntries.length ? `${hourEntries[0][0]}h – ${String((Number(hourEntries[0][0])+1)%24).padStart(2,'0')}h` : '—';
 
-  const _sp = sumNum('spend'), _rc = sumNum('reach'), _im = sumNum('impressions');
-  const purch = sumAction('actions', AP);
-  const convVal = sumAction('action_values', AP);
-  const roas = _sp ? convVal/_sp : 0;
-  const cpa = purch ? _sp/purch : 0;
-  const cpm = _im ? _sp/_im*1000 : 0;
-  const isDelivery = deliveryCampaigns.length > 0;
-  const nf2 = n => Number(n||0).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
-  const linkClicks = sumNum('inline_link_clicks') || sumAction('actions', ['link_click']);
-  const pageViews = sumAction('actions', ['landing_page_view','onsite_web_view_content']);
-  const costPV = pageViews ? _sp/pageViews : 0;
-  const ctr = _im ? sumClicks/_im*100 : 0;
-  const cpc = sumClicks ? _sp/sumClicks : 0;
-  const _sc = [
-    {show:purch>0,      ico:IC.bag,     label:'Compras no site',         val:N(purch)},
-    {show:purch>0,      ico:IC.tag,     label:'Custo por compra',        val:BRL(cpa)},
-    {show:convVal>0,    ico:IC.money,   label:'Valor de conversão',      val:BRL(convVal), hl:true},
-    {show:roas>0,       ico:IC.roas,    label:'ROAS',                    val:nf2(roas),    hl:true},
-    {show:true,         ico:IC.people,  label:'Alcance',                 val:N(_rc)},
-    {show:true,         ico:IC.eye,     label:'Impressões',              val:N(_im)},
-    {show:linkClicks>0, ico:IC.cursor,  label:'Cliques no link',         val:N(linkClicks)},
-    {show:pageViews>0,  ico:IC.browser, label:'Visualizações da página', val:N(pageViews)},
-    {show:pageViews>0,  ico:IC.money,   label:'Custo por visualização',  val:BRL(costPV)},
-    {show:ctr>0,        ico:IC.bars,    label:'CTR',                     val:nf2(ctr)+'%'},
-    {show:cpc>0,        ico:IC.cursor,  label:'CPC',                     val:BRL(cpc)},
-    {show:true,         ico:IC.cpm,     label:'CPM',                     val:BRL(cpm)},
-  ];
-  const salesCards = _sc.filter(c=>c.show).map(c=>`<div class="stat-card${c.hl?' hl':''}"><div class="stat-ico">${c.ico}</div><div class="stat-label">${c.label}</div><div class="stat-value">${c.val}</div></div>`).join('');
-  const deliveryCampNames = deliveryCampaigns.map(c=>c.name).join(', ');
-  const salesHtml = isDelivery ? `
-    <div class="section" style="margin-bottom:18px">
-      <div class="sec-title"><div class="sec-ico">${IC.bag}</div><span class="sec-pill">Vendas / Conversões</span></div>
-      <p style="font-size:11.5px;font-weight:700;color:var(--ink3);margin:-10px 0 16px" title="${deliveryCampNames}">Métricas isoladas de: ${deliveryCampNames}</p>
-      <div class="sales-grid">${salesCards}</div>
-    </div>` : '';
+  const WEEKDAYS = ['domingo','segunda-feira','terça-feira','quarta-feira','quinta-feira','sexta-feira','sábado'];
+  const wdTotals = {};
+  daily.forEach(d => {
+    const wd = new Date(d.date_start+'T12:00:00').getDay();
+    wdTotals[wd] = (wdTotals[wd]||0) + av(d.actions, MSG_TYPES);
+  });
+  const wdEntries = Object.entries(wdTotals).filter(([,v])=>v>0).sort((a,b)=>b[1]-a[1]);
+  const peakDayLabel = wdEntries.length ? (w => w.charAt(0).toUpperCase()+w.slice(1))(WEEKDAYS[wdEntries[0][0]]) : '—';
+
   return `
   <div id="exportTarget">
-    ${SHEET_BLOBS}
-    <div class="dash-header">
-      <div class="hdr-row">
-        <div class="hdr-logo-mark" role="img" aria-label="Foco Marketing">
-          <span class="lm-foco">foco</span><span class="lm-marketing">marketing</span><span class="lm-dot">.</span>
-          <svg width="19" height="23" viewBox="0 0 19 23" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 22V2"/><path d="M3 2h9c2.6 0 2.6 3.4 0 3.4H8.5c-2.6 0-2.6 3.4 0 3.4H14"/></svg>
+    <div class="r-header">
+      <div class="r-ico">${objIcon}</div>
+      <div class="r-title-wrap">
+        <div class="r-eyebrow">Relatório Meta Ads</div>
+        <div class="r-title">${acc.name}</div>
+        <div class="r-sub">Meta Ads | objetivo: <b>${objLabel}</b></div>
+      </div>
+      <div class="r-pills">
+        <span class="pill">${IC.meta} Meta</span>
+        <span class="pill">${IC.insta} ${IC.fb} Instagram + Facebook</span>
+        <span class="pill">${IC.cal} Período: ${dateLabel()} <span class="caret">${IC.caret}</span></span>
+        <span class="pill sync">${IC.check} Dados sincronizados via token/API Meta Ads</span>
+      </div>
+    </div>
+
+    <div class="kpi-row">${kpiRow}</div>
+
+    <div class="grid-2">
+      <div class="section">
+        <div class="sec-title"><div class="sec-ico">${IC.bars}</div><div class="sec-h">Jornada da campanha: onde está o maior vazamento?</div></div>
+        ${funnelHtml}
+        <div class="funnel-note"><b>Leitura:</b> o maior vazamento está entre <b>${dropLabels}</b>. Ajuste a segmentação e a mensagem para reduzir essa perda.</div>
+      </div>
+      <div class="grid-2" style="margin-bottom:0">
+        <div class="section">
+          <div class="chart-head"><div class="sec-title" style="margin-bottom:0"><div class="sec-ico">${IC.chat}</div><div class="sec-h">Mensagens no período</div></div><div class="chart-total"><div class="ct-l">Total</div><div class="ct-v">${N(conversas)}</div></div></div>
+          ${lineChartSVG(msgPoints, { color:'#1168C8' })}
+        </div>
+        <div class="section">
+          <div class="chart-head"><div class="sec-title" style="margin-bottom:0"><div class="sec-ico">${IC.money}</div><div class="sec-h">Custo por conversa</div></div><div class="chart-total"><div class="ct-l">Média</div><div class="ct-v">${BRL(custoConv)}</div></div></div>
+          ${lineChartSVG(costPoints, { color:'#0B386D', money:true })}
         </div>
       </div>
-      <div class="h-title">Relatório de Meta Ads</div>
-      <div class="h-accent"></div>
-      <div class="h-sub">Meta Ads — <b>Agência Foco</b> <span class="h-unit">| ${acc.name.toUpperCase()}</span></div>
-      <div>
-        <span class="date-pill">${IC.cal} ${dateLabel()}</span>
-        <span class="live-pill"><span class="live-dot"></span> Dados em tempo real</span>
-      </div>
     </div>
 
-    <div class="kpi-grid">
-      <div class="kpi-card">
-        <div class="kpi-ico">${IC.money}</div>
-        <div class="kpi-label">Total investido</div>
-        <div class="kpi-value">${BRL(summary.spend)}</div>
+    <div class="grid-3">
+      <div class="section">
+        <div class="sec-title"><div class="sec-ico">${IC.trophy}</div><div class="sec-h">Ranking de campanhas</div></div>
+        ${rankTable}
       </div>
-      <div class="kpi-card">
-        <div class="kpi-ico">${IC.people}</div>
-        <div class="kpi-label">Alcance total</div>
-        <div class="kpi-value">${N(summary.reach)}</div>
+      <div class="section">
+        <div class="sec-title"><div class="sec-ico">${IC.money}</div><div class="sec-h">Investimento por campanha</div></div>
+        <div class="donut-wrap">
+          <div class="donut-center">${donutSVG(donutData, 120, 22)}<div class="donut-total"><div class="dt-l">Total</div><div class="dt-v">${BRL(totalSpend)}</div></div></div>
+          <div class="legend">${donutLegend}</div>
+        </div>
       </div>
-      <div class="kpi-card">
-        <div class="kpi-ico">${IC.eye}</div>
-        <div class="kpi-label">Impressões totais</div>
-        <div class="kpi-value">${N(summary.impressions)}</div>
-      </div>
-    </div>
-
-    ${salesHtml}
-
-    <div class="report-grid">
-      <div class="section span-2">
-        <div class="sec-title"><div class="sec-ico">${IC.mega}</div><span class="sec-pill">Campanhas veiculadas</span></div>
-        ${campsHtml}
-      </div>
-
-      <div class="section${topAds.length > 0 ? '' : ' span-2'}">
-        <div class="sec-title"><div class="sec-ico">${IC.trophy}</div><span class="sec-pill">Melhores anúncios</span></div>
+      <div class="section">
+        <div class="sec-title"><div class="sec-ico">${IC.trophy}</div><div class="sec-h">Melhores anúncios</div></div>
         ${adsHtml}
       </div>
+    </div>
 
-      ${topAds.length > 0 ? `
-      <div class="section">
-        <div class="sec-title"><div class="sec-ico">${IC.bolt}</div><span class="sec-pill">Insights rápidos</span></div>
-        <div class="ins-grid">${insCards}</div>
-      </div>` : ''}
-
-      <div class="section span-2">
-        <div class="sec-title"><div class="sec-ico">${IC.infinity}</div><span class="sec-pill">Resumo da conta Meta Ads</span></div>
-        <div class="meta-row">
-          <div class="meta-logo"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M14 8.5V7c0-.9.4-1.3 1.3-1.3H17V2.7h-2.5c-2.7 0-3.8 1.4-3.8 3.9v1.9H9v3h1.7V22H14v-10.5h2.4l.4-3H14Z"/></svg></div>
-          <div>
-            <div class="meta-info-label">Meta Ads</div>
-            <div class="meta-info-name">Agência Foco | ${acc.name}</div>
+    <div class="section" style="margin-bottom:14px">
+      <div class="sec-title"><div class="sec-ico">${IC.people}</div><div class="sec-h">Perfil do público</div></div>
+      <div class="audience-grid">
+        <div>
+          <div style="display:flex;justify-content:center">${genderDonut}</div>
+          <div class="gender-legend">
+            <div class="legend-row"><span class="legend-dot" style="background:#0B386D"></span><span class="legend-name">Mulher</span><span class="legend-pct">${fPct.toFixed(0)}%</span></div>
+            <div class="legend-row"><span class="legend-dot" style="background:#3DA0E6"></span><span class="legend-name">Homem</span><span class="legend-pct">${mPct.toFixed(0)}%</span></div>
           </div>
         </div>
-        <div class="resumo-grid">
-          <div><div class="rg-label">Investimento</div><div class="rg-value">${BRL(summary.spend)}</div></div>
-          <div><div class="rg-label">Alcance</div><div class="rg-value">${N(summary.reach)}</div></div>
-          <div><div class="rg-label">Impressões</div><div class="rg-value">${N(summary.impressions)}</div></div>
-          <div><div class="rg-label">Período</div><div class="rg-value" style="font-size:13px">${periodShort()}</div></div>
-        </div>
+        <div><div class="sec-h" style="margin-bottom:12px;font-size:11px;color:var(--ink3);text-transform:uppercase;letter-spacing:.04em">Idade</div>${ageBars}</div>
+        <div><div class="sec-h" style="margin-bottom:12px;font-size:11px;color:var(--ink3);text-transform:uppercase;letter-spacing:.04em">Posicionamentos que mais geram mensagens</div>${placeHtml}</div>
       </div>
     </div>
 
-    <div class="dash-footer">
-      <svg class="foot-wave" viewBox="0 0 460 60" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M0 38 C 70 20, 140 56, 230 40 C 320 24, 390 52, 460 36 L460 60 L0 60 Z" fill="rgba(255,255,255,.10)"/>
-        <path d="M0 48 C 80 34, 150 60, 240 46 C 330 32, 400 56, 460 44 L460 60 L0 60 Z" fill="rgba(255,255,255,.08)"/>
-      </svg>
-      <div class="foot-inner">
-        <div class="foot-ico">${IC.target}</div>
-        <div class="foot-tagline">Marketing, tecnologia e IA trabalhando <b>juntos</b>.</div>
-      </div>
-      <div class="foot-meta">Dados de Meta Ads · ${acc.name}</div>
+    <div class="insights-strip">
+      <div class="is-head">${IC.bolt} INSIGHTS RÁPIDOS</div>
+      <div class="is-item"><div class="is-l">Melhor campanha</div><div class="is-v">${bestCamp?bestCamp.name:'—'}<small>${bestCamp?BRL(bestCamp.cc)+' por conversa':''}</small></div></div>
+      <div class="is-item"><div class="is-l">Maior volume de mensagens</div><div class="is-v">${N(mostMsgCamp?.conv||0)} conversas<small>${mostMsgCamp?mostMsgCamp.name:''}</small></div></div>
+      <div class="is-item"><div class="is-l">Melhor CTR (link)</div><div class="is-v">${ctrOf(bestCtrCamp||{ins:{}}).toFixed(2)}%<small>${bestCtrCamp?bestCtrCamp.name:''}</small></div></div>
+      <div class="is-item"><div class="is-l">Menor custo por conversa</div><div class="is-v">${bestCamp?BRL(bestCamp.cc):'—'}<small>${bestCamp?bestCamp.name:''}</small></div></div>
+      <div class="is-item"><div class="is-l">Hora de pico (mensagens)</div><div class="is-v">${peakHourLabel}<small>maior concentração</small></div></div>
+      <div class="is-item"><div class="is-l">Dia da semana (mensagens)</div><div class="is-v">${peakDayLabel}<small>melhor desempenho</small></div></div>
     </div>
   </div>`;
 }
@@ -716,13 +912,13 @@ async function exportImage() {
   const btn = document.getElementById('btnExport');
   btn.disabled = true; btn.textContent = 'Gerando imagem…';
   try {
-    const canvas = await html2canvas(el, { scale:2.5, useCORS:true, backgroundColor:'#EEF6FE', logging:false });
+    const canvas = await html2canvas(el, { scale:2.5, useCORS:true, backgroundColor:'#FFFFFF', logging:false });
     const link = document.createElement('a');
     link.download = `foco_${ACCOUNTS[activeTab].name.replace(/\s+/g,'_')}_meta_ads.png`;
     link.href = canvas.toDataURL('image/png');
     link.click();
   } catch(e) { alert('Erro: '+e.message); }
-  btn.disabled = false; btn.innerHTML = IC.cam + ' Exportar como imagem';
+  btn.disabled = false; btn.innerHTML = ' Exportar como imagem';
 }
 
 async function exportAllClients() {
@@ -733,7 +929,7 @@ async function exportAllClients() {
 
   const offscreen = document.createElement('div');
   offscreen.className = 'page';
-  offscreen.style.cssText = 'position:fixed; left:-99999px; top:0; padding:0;';
+  offscreen.style.cssText = 'position:fixed; left:-99999px; top:0; padding:0; background:#fff;';
   document.body.appendChild(offscreen);
 
   const zip = new JSZip();
@@ -748,7 +944,7 @@ async function exportAllClients() {
       offscreen.innerHTML = buildReport(acc, cache[key]);
       await new Promise(r => setTimeout(r, 80));
       const el = offscreen.querySelector('#exportTarget');
-      const canvas = await html2canvas(el, { scale:2, useCORS:true, backgroundColor:'#EEF6FE', logging:false });
+      const canvas = await html2canvas(el, { scale:2, useCORS:true, backgroundColor:'#FFFFFF', logging:false });
       const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
       zip.file(`foco_${acc.name.replace(/\s+/g,'_')}_meta_ads.png`, blob);
     } catch (e) {
@@ -775,8 +971,8 @@ async function exportAllClients() {
   btn.textContent = original;
 }
 
-/* boot: inject static icons and auto-load first unit (token comes from server env) */
-document.getElementById('btnExport').innerHTML = IC.cam + ' Exportar como imagem';
+/* boot */
+document.getElementById('btnExport').innerHTML = ' Exportar como imagem';
 buildTabs();
 loadData(activeTab);
 </script>
