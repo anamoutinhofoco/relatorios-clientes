@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agência Foco — Relatório de Meta Ads</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,600;1,700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --blue:       #1168C8;   /* azul performance — primary */
+  --blue-deep:  #0B386D;   /* azul profundo — headings */
+  --blue-title: #0A618D;   /* azul institucional — big titles */
+  --blue-brt:   #1168C8;   /* values / numbers */
+  --blue-soft:  #3DA0E6;   /* azul claro — light accent */
+  --blob:       #DCEBFB;   /* pale blue */
+  --blob2:      #EAF3FD;
+  --circle:     #DEEBFC;   /* icon circle bg */
+  --circle2:    #EAF3FD;
+  --ice:        #EAF3FD;
+  --ice2:       #F3F9FE;
+  --white:      #FFFFFF;
+  --ink:        #23303D;
+  --ink2:       #435264;
+  --ink3:       #7A8A99;
+  --line:       #E4EEF9;
+  --navy:       #0B386D;
+  --green:      #16A34A;
+  --shadow:     0 8px 30px rgba(17,104,200,.10);
+  --shadow-sm:  0 4px 18px rgba(17,104,200,.08);
+  --r-card:     24px;
+  --r-pill:     100px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Montserrat', 'Segoe UI', sans-serif;
+  background:
+    radial-gradient(1200px 560px at -8% -6%, var(--blob) 0%, transparent 55%),
+    radial-gradient(1000px 520px at 108% -4%, var(--blob2) 0%, transparent 55%),
+    radial-gradient(1000px 520px at 50% 118%, var(--blob) 0%, transparent 55%),
+    #EEF6FE;
+  background-attachment: fixed;
+  min-height: 100vh;
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── SETUP BAR ── */
+.setup-bar {
+  background: var(--navy);
+  padding: 10px 16px; display: flex; align-items: center; gap: 10px;
+  flex-wrap: wrap;
+}
+.setup-bar label { color: #9EC6F5; font-size: 11px; font-weight: 800; white-space: nowrap; letter-spacing: .5px; text-transform: uppercase; }
+.setup-bar input {
+  flex: 1; min-width: 180px; padding: 8px 14px; border-radius: 10px;
+  border: 1.5px solid rgba(120,175,240,.25); font-size: 13px;
+  background: rgba(255,255,255,.07); color: white; font-family: inherit;
+}
+.setup-bar input:focus { outline: none; border-color: var(--blue-soft); }
+.setup-bar input::placeholder { color: rgba(255,255,255,.35); }
+.setup-bar select {
+  padding: 8px 12px; border-radius: 10px; border: 1.5px solid rgba(120,175,240,.25);
+  font-size: 12px; background: rgba(255,255,255,.07); color: white; cursor: pointer;
+  font-family: inherit; font-weight: 700;
+}
+.btn-connect {
+  background: var(--blue); color: white; border: none; padding: 9px 20px;
+  border-radius: 10px; font-size: 12px; font-weight: 800; cursor: pointer;
+  letter-spacing: .3px; font-family: inherit; box-shadow: 0 4px 14px rgba(17,104,200,.35);
+  transition: transform .15s, box-shadow .15s;
+}
+.btn-connect:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(17,104,200,.45); }
+.btn-connect:disabled { opacity: .55; cursor: default; transform: none; }
+.btn-bulk { background: var(--green); box-shadow: 0 4px 14px rgba(22,163,74,.35); margin-left: auto; }
+.btn-bulk:hover { box-shadow: 0 6px 20px rgba(22,163,74,.45); }
+
+/* ── TABS ── */
+.tabs-wrap {
+  background: var(--white); border-bottom: 1.5px solid var(--line);
+  display: flex; flex-wrap: wrap; padding: 6px 16px;
+  position: sticky; top: 0; z-index: 10;
+  box-shadow: 0 2px 16px rgba(17,104,200,.08);
+  max-height: 96px; overflow-y: auto;
+}
+.tab {
+  display: inline-block; padding: 9px 13px; cursor: pointer;
+  font-size: 12px; font-weight: 700; color: var(--ink3); white-space: nowrap;
+  border-bottom: 3px solid transparent; transition: all .15s; user-select: none;
+}
+.tab:hover { color: var(--blue); }
+.tab.active { color: var(--blue); border-bottom-color: var(--blue); }
+
+/* ── PAGE (web sheet) ── */
+.page { max-width: 1120px; margin: 0 auto; padding: 30px 22px 50px; }
+#exportTarget {
+  position: relative; background: var(--white); border-radius: 34px;
+  padding: 34px 34px 22px; overflow: hidden;
+  box-shadow: 0 24px 70px rgba(17,104,200,.14); border: 1px solid var(--line);
+}
+/* decorative blobs on the sheet corners */
+.sheet-blobs { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+#exportTarget > *:not(.sheet-blobs) { position: relative; z-index: 1; }
+
+/* ── HEADER / HERO ── */
+.dash-header {
+  position: relative; margin-bottom: 26px; padding-bottom: 8px;
+}
+.hdr-blobs { display: none; }
+.hdr-row { display: flex; align-items: center; justify-content: center; margin-bottom: 22px; }
+.hdr-bell { display: none; }
+.hdr-logo-mark { display: inline-flex; align-items: center; gap: 4px; font-family: 'Montserrat', sans-serif; line-height: 1; }
+.hdr-logo-mark .lm-foco { font-size: 27px; font-weight: 500; color: var(--blue); letter-spacing: -.2px; }
+.hdr-logo-mark .lm-marketing { font-size: 27px; font-weight: 800; color: var(--blue); letter-spacing: -.2px; }
+.hdr-logo-mark .lm-dot { font-size: 27px; font-weight: 800; color: var(--blue); margin: 0 1px 0 -1px; }
+.hdr-logo-mark svg { color: var(--blue); display: block; margin-left: 1px; }
+.h-title {
+  color: var(--blue-title); font-size: 54px; font-weight: 900;
+  line-height: .96; letter-spacing: -1px; text-transform: uppercase; max-width: 70%;
+}
+.h-accent { width: 190px; height: 5px; border-radius: 4px; background: var(--blue); margin: 14px 0 0; }
+.h-sub { margin-top: 14px; font-size: 18px; font-weight: 700; color: var(--ink2); max-width: 72%; }
+.h-sub b { color: var(--blue); font-weight: 800; }
+.h-unit { color: var(--blue-soft); font-weight: 800; }
+.date-pill {
+  margin-top: 18px; display: inline-flex; align-items: center; gap: 9px;
+  background: var(--white); border: 1.5px solid var(--line);
+  border-radius: 14px; padding: 10px 17px; color: var(--ink); font-size: 13.5px; font-weight: 700;
+  box-shadow: var(--shadow-sm);
+}
+.date-pill svg { color: var(--blue); }
+.date-pill .caret { color: var(--ink3); margin-left: 2px; }
+.live-pill {
+  margin-top: 18px; margin-left: 10px; display: inline-flex; align-items: center; gap: 8px;
+  background: #E8F7EE; border: 1.5px solid #BEEBCF; border-radius: 14px;
+  padding: 10px 15px; color: var(--green); font-size: 12.5px; font-weight: 800;
+}
+.live-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--green); box-shadow: 0 0 0 4px rgba(22,163,74,.15); }
+
+/* ── KPI CARDS ── */
+.kpi-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 18px; margin-bottom: 22px; }
+.kpi-card {
+  background: linear-gradient(160deg, var(--ice2), var(--white));
+  border-radius: 22px; padding: 24px 18px 22px;
+  text-align: center; box-shadow: var(--shadow-sm); border: 1px solid var(--line);
+}
+.kpi-ico {
+  width: 58px; height: 58px; border-radius: 50%; background: var(--circle);
+  display: flex; align-items: center; justify-content: center; margin: 0 auto 14px; color: var(--blue);
+}
+.kpi-ico svg { width: 28px; height: 28px; }
+.kpi-label { font-size: 12px; color: var(--ink3); font-weight: 700; text-transform: uppercase; letter-spacing: .6px; margin-bottom: 8px; line-height: 1.2; }
+.kpi-value { font-size: 30px; font-weight: 900; color: var(--blue-deep); line-height: 1; }
+
+/* ── REPORT GRID (web two-column) ── */
+.report-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; align-items: start; }
+.report-grid .span-2 { grid-column: 1 / -1; }
+@media (max-width: 780px) { .report-grid { grid-template-columns: 1fr; } }
+
+/* ── SECTION ── */
+.section {
+  background: var(--white); border-radius: var(--r-card); padding: 24px 22px;
+  margin-bottom: 0; box-shadow: var(--shadow-sm); border: 1px solid var(--line);
+}
+.sec-title { margin-bottom: 18px; display: flex; align-items: center; gap: 12px; }
+.sec-ico {
+  width: 44px; height: 44px; border-radius: 13px; background: var(--circle);
+  display: flex; align-items: center; justify-content: center; color: var(--blue); flex-shrink: 0;
+}
+
+/* ── CAMPAIGNS ── */
+.camp-item { display: flex; align-items: center; gap: 14px; padding: 16px 0; border-bottom: 1px solid var(--line); }
+.camp-item:first-child { padding-top: 2px; }
+.camp-item:last-child { border-bottom: none; padding-bottom: 2px; }
+.camp-ico { width: 48px; height: 48px; min-width: 48px; border-radius: 14px; background: var(--circle); display: flex; align-items: center; justify-content: center; color: var(--blue); }
+.camp-main { flex: 1; min-width: 0; }
+.camp-name { font-size: 14px; font-weight: 800; color: var(--ink); line-height: 1.3; }
+.camp-sub { font-size: 12px; font-weight: 700; color: var(--blue); margin-top: 2px; }
+.camp-nums { display: flex; gap: 22px; flex-shrink: 0; text-align: right; }
+.cn-l { font-size: 10px; color: var(--ink3); font-weight: 700; text-transform: uppercase; letter-spacing: .3px; margin-bottom: 3px; }
+.cn-v { font-size: 15px; font-weight: 900; color: var(--blue-deep); }
+.camp-spend { font-size: 13px; font-weight: 800; color: var(--ink2); margin-top: 3px; }
+
+/* ── META RESUMO ── */
+.meta-row { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
+.meta-logo { width: 48px; height: 48px; border-radius: 14px; flex-shrink: 0; background: linear-gradient(135deg, #0668E1, #0090FF); display: flex; align-items: center; justify-content: center; color: white; box-shadow: 0 4px 14px rgba(6,104,225,.25); }
+.meta-info-label { font-size: 11px; color: var(--ink3); font-weight: 700; letter-spacing: .5px; text-transform: uppercase; }
+.meta-info-name  { font-size: 15px; font-weight: 900; color: var(--ink); }
+.resumo-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; background: var(--ice2); border-radius: 18px; padding: 20px 16px; border: 1px solid var(--line); }
+.rg-label { font-size: 10px; color: var(--ink3); margin-bottom: 6px; text-transform: uppercase; letter-spacing: .5px; font-weight: 700; }
+.rg-value { font-size: 17px; font-weight: 900; color: var(--blue-deep); }
+
+/* ── TOP ADS ── */
+.ad-item { display: flex; align-items: center; gap: 12px; padding: 14px 0; border-bottom: 1px solid var(--line); }
+.ad-item:last-child { border-bottom: none; padding-bottom: 2px; }
+.rank-badge { width: 32px; height: 32px; min-width: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 14px; flex-shrink: 0; }
+.rb-1 { background: linear-gradient(135deg, #FCD34D, #F59E0B); color: #7C3A00; box-shadow: 0 3px 10px rgba(245,158,11,.35); }
+.rb-2 { background: linear-gradient(135deg, #D9DEE6, #AEB6C2); color: #34404F; }
+.rb-3 { background: linear-gradient(135deg, #E1A46A, #C57B36); color: white; }
+.ad-thumb { width: 56px; height: 56px; min-width: 56px; border-radius: 14px; object-fit: cover; background: var(--ice); border: 1px solid var(--line); }
+.ad-thumb-ph { width: 56px; height: 56px; min-width: 56px; border-radius: 14px; background: var(--circle2); display: flex; align-items: center; justify-content: center; color: var(--blue-soft); border: 1px solid var(--line); }
+.ad-info { flex: 1; min-width: 0; }
+.ad-name { font-size: 14px; font-weight: 800; color: var(--ink); margin-bottom: 9px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ad-metrics { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; }
+.am-l { font-size: 9.5px; color: var(--ink3); font-weight: 700; text-transform: uppercase; letter-spacing: .3px; margin-bottom: 3px; }
+.am-v { font-size: 14px; font-weight: 900; color: var(--blue-deep); }
+.top1-card { background: linear-gradient(135deg, #FFFBF0, #FFF8E8); border: 1.5px solid #FBE3AC; border-radius: 18px; padding: 14px 13px; margin-bottom: 4px; box-shadow: 0 4px 16px rgba(245,158,11,.08); position: relative; }
+.top1-seal { position: absolute; top: -9px; left: 14px; background: linear-gradient(135deg, #FCD34D, #F59E0B); color: #7C3A00; font-size: 8.5px; font-weight: 900; padding: 4px 10px; border-radius: var(--r-pill); box-shadow: 0 2px 8px rgba(245,158,11,.35); letter-spacing: .3px; display: inline-flex; align-items: center; gap: 4px; }
+
+/* ── INSIGHTS ── */
+.ins-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 14px; }
+.ins-card { background: var(--ice2); border-radius: 18px; padding: 18px 16px; border: 1px solid var(--line); }
+.ins-ico { width: 44px; height: 44px; border-radius: 12px; background: var(--white); display: flex; align-items: center; justify-content: center; color: var(--blue); margin-bottom: 12px; box-shadow: var(--shadow-sm); }
+.ins-label { font-size: 10.5px; color: var(--ink3); font-weight: 700; text-transform: uppercase; letter-spacing: .5px; margin-bottom: 5px; }
+.ins-name { font-size: 12.5px; font-weight: 700; color: var(--ink2); margin-bottom: 9px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ins-value { font-size: 21px; font-weight: 900; color: var(--blue); }
+
+/* ── DIVIDER ── */
+.section-divider { display: flex; align-items: center; gap: 10px; margin: 6px 0 4px; }
+.section-divider::before, .section-divider::after { content: ''; flex: 1; height: 1px; background: var(--line); }
+.section-divider svg { color: var(--blue-soft); }
+
+/* ── FOOTER ── */
+.dash-footer {
+  position: relative; overflow: hidden; border-radius: 22px; margin-top: 22px;
+  background: linear-gradient(135deg, #1168C8 0%, #0B386D 100%);
+  padding: 28px 26px 26px; text-align: center;
+  display: flex; align-items: center; justify-content: center; gap: 14px;
+}
+.foot-wave { position: absolute; left: 0; right: 0; bottom: 0; width: 100%; display: block; z-index: 0; }
+.foot-inner { position: relative; z-index: 2; display: flex; align-items: center; gap: 14px; }
+.foot-ico { width: 48px; height: 48px; border-radius: 50%; background: rgba(255,255,255,.16); display: inline-flex; align-items: center; justify-content: center; color: white; flex-shrink: 0; }
+.foot-tagline { color: white; font-size: 18px; font-weight: 800; font-style: italic; }
+.foot-tagline b { font-weight: 900; }
+.foot-meta { position: relative; z-index: 2; color: rgba(255,255,255,.72); font-size: 11px; font-weight: 600; letter-spacing: .4px; text-transform: uppercase; margin-left: auto; }
+
+/* ── EXPORT ── */
+.export-wrap { max-width: 1120px; margin: 0 auto; padding: 0 22px 50px; }
+.btn-export {
+  background: var(--navy); color: white; border: none; padding: 16px; border-radius: 16px;
+  font-size: 14px; font-weight: 800; cursor: pointer; width: 100%;
+  box-shadow: 0 4px 18px rgba(14,42,87,.3); font-family: inherit; letter-spacing: .3px;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  transition: transform .15s, box-shadow .15s;
+}
+.btn-export:hover { transform: translateY(-1px); box-shadow: 0 6px 24px rgba(14,42,87,.4); }
+.btn-export:disabled { opacity: .5; cursor: default; transform: none; }
+
+/* ── STATES ── */
+.state-box { text-align: center; padding: 64px 24px; color: var(--ink3); }
+.state-ico { color: var(--blue-soft); margin-bottom: 16px; display: flex; justify-content: center; }
+.state-box p { font-size: 14px; line-height: 1.75; font-weight: 600; }
+.state-box strong { color: var(--blue); }
+.spinner { width: 38px; height: 38px; border: 3px solid var(--ice); border-top-color: var(--blue); border-radius: 50%; animation: spin .75s linear infinite; margin: 0 auto 16px; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.err-box { background: #FFF0F0; border: 1.5px solid #FCA5A5; border-radius: 14px; padding: 14px; color: #DC2626; font-size: 13px; margin: 14px 0; font-weight: 700; }
+.no-data { color: var(--ink3); font-size: 13px; text-align: center; padding: 16px 0; font-weight: 600; }
+
+.sec-pill { display:inline-flex; align-items:center; background: var(--blue); color:#fff; font-size:15px; font-weight:800; letter-spacing:.4px; text-transform:uppercase; padding:10px 18px; border-radius:100px; line-height:1; box-shadow:0 4px 12px rgba(17,104,200,.28); }
+.sales-grid { display:grid; grid-template-columns:repeat(6,1fr); gap:12px; }
+.stat-card { background:var(--ice2); border:1px solid var(--line); border-radius:18px; padding:18px 8px 16px; text-align:center; }
+.stat-ico { width:46px;height:46px;border-radius:50%;background:var(--circle);color:var(--blue);display:flex;align-items:center;justify-content:center;margin:0 auto 11px; }
+.stat-ico svg{ width:24px;height:24px; }
+.stat-label { font-size:10px;color:var(--ink3);font-weight:700;text-transform:uppercase;letter-spacing:.2px;margin-bottom:8px;line-height:1.2;min-height:24px;display:flex;align-items:center;justify-content:center; }
+.stat-value { font-size:17px;font-weight:900;color:var(--blue-deep);line-height:1; }
+.stat-card.hl { background:linear-gradient(135deg,#E9F1FF,#DBEAFC); border-color:#C5DCF8; }
+.stat-card.hl .stat-value{ color:var(--blue); }
+@media (max-width:900px){ .sales-grid{ grid-template-columns:repeat(3,1fr);} }
+@media (max-width:520px){ .sales-grid{ grid-template-columns:repeat(2,1fr);} .h-title{ font-size:38px; } }
+</style>
+</head>
+<body>
+
+<div class="setup-bar">
+  <label>Período:</label>
+  <select id="datePreset" onchange="reloadTab()">
+    <option value="this_month">Mês atual</option>
+    <option value="last_month">Mês anterior</option>
+    <option value="last_7d">Últimos 7 dias</option>
+    <option value="last_30d">Últimos 30 dias</option>
+    <option value="this_year">Este ano</option>
+  </select>
+  <button class="btn-connect" onclick="reloadTab()">Atualizar</button>
+  <button class="btn-connect btn-bulk" id="btnBulk" onclick="exportAllClients()">Baixar todos os clientes</button>
+</div>
+
+<div class="tabs-wrap" id="tabsWrap"></div>
+
+<div class="page" id="dashPage">
+  <div class="state-box">
+    <div class="spinner"></div>
+    <p>Carregando dados…</p>
+  </div>
+</div>
+
+<div class="export-wrap" id="exportWrap">
+  <button class="btn-export" id="btnExport" onclick="exportImage()"> Exportar como imagem</button>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script>
+/* ── BRAND ASSETS (base64) ── */
+
+/* ── INLINE SVG ICONS (outline, currentColor) ── */
+const IC = {
+  browser:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 9h18"/><path d="M6 7h.01M8.5 7h.01"/></svg>',
+  bars:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4v16h16"/><path d="M8 18v-4M13 18v-8M18 18v-6"/></svg>',
+  bag:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6.4 8.5h11.2l-.85 9.7a2 2 0 0 1-2 1.8H9.25a2 2 0 0 1-2-1.8L6.4 8.5Z"/><path d="M9 9.2V7.6a3 3 0 0 1 6 0v1.6"/></svg>',
+  tag:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3.6 12.4 11 5h6.4a1 1 0 0 1 1 1V12l-7.4 7.4a1.4 1.4 0 0 1-2 0l-5.4-5.4a1.4 1.4 0 0 1 0-1.6Z"/><circle cx="15" cy="9" r="1.3"/></svg>',
+  roas:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V4"/><path d="M4 20h16"/><path d="M7.5 15l3.5-4 3 2.5L19 8"/><path d="M15.5 8H19v3.5"/></svg>',
+  freq:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h3l2.5 7 5-14 2.5 7H21"/></svg>',
+  cpm:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg>',
+  cone:'<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M8 8a4 4 0 0 1 8 0"/><path d="M6.5 8h11"/><path d="M8 11l4 10 4-10"/><path d="M7 14.5h10"/></svg>',
+  bell:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>',
+  cal:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="3"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>',
+  caret:'<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>',
+  money:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M14.5 9.3C14.5 8 13.4 7.5 12 7.5s-2.5.6-2.5 1.8c0 2.6 5 1.3 5 3.9 0 1.2-1.1 1.8-2.5 1.8s-2.5-.6-2.5-1.9"/></svg>',
+  people:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.2"/><path d="M3.5 19a5.5 5.5 0 0 1 11 0"/><path d="M16 5.2a3.2 3.2 0 0 1 0 5.6"/><path d="M17.5 13.6A5.5 5.5 0 0 1 20.5 19"/></svg>',
+  eye:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12Z"/><circle cx="12" cy="12" r="3"/></svg>',
+  mega:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11v2a1 1 0 0 0 1 1h2l6 4V6L6 10H4a1 1 0 0 0-1 1Z"/><path d="M16 8.5a4 4 0 0 1 0 7"/><path d="M6 14v4a1 1 0 0 0 1 1h1"/></svg>',
+  target:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.7"/><circle cx="12" cy="12" r="1.2" fill="currentColor"/></svg>',
+  follow:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.3"/><path d="M3.5 19a5.5 5.5 0 0 1 11 0"/><path d="M18 8v6M15 11h6"/></svg>',
+  cart:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.4"/><circle cx="17" cy="20" r="1.4"/><path d="M2.5 3.5h2l2.2 11.2a1.5 1.5 0 0 0 1.5 1.2h8.1a1.5 1.5 0 0 0 1.5-1.2L21 7H6"/></svg>',
+  play:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M10 8.5l6 3.5-6 3.5V8.5Z" fill="currentColor" stroke="none"/></svg>',
+  infinity:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M7 8a4 4 0 1 0 0 8c2 0 3-1.5 5-4s3-4 5-4a4 4 0 0 1 0 8c-2 0-3-1.5-5-4S9 8 7 8Z"/></svg>',
+  trophy:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4h10v4a5 5 0 0 1-10 0V4Z"/><path d="M7 5H4v1a3 3 0 0 0 3 3M17 5h3v1a3 3 0 0 1-3 3"/><path d="M12 13v3M9 20h6M10 20l.5-4h3l.5 4"/></svg>',
+  bolt:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8Z"/></svg>',
+  cursor:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3l6 18 2.5-7.5L21 11 5 3Z"/></svg>',
+  star:'<svg width="12" height="12" viewBox="0 0 24 24" fill="#7C3A00" stroke="none"><path d="M12 2l2.9 6.3 6.9.7-5.1 4.6 1.4 6.8L12 17.8 5.9 20.4l1.4-6.8L2.2 9l6.9-.7L12 2Z"/></svg>',
+  cam:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8a2 2 0 0 1 2-2h2l1.5-2h7L17 6h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8Z"/><circle cx="12" cy="12.5" r="3.3"/></svg>',
+  img:'<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="8.5" cy="9.5" r="1.6"/><path d="M4 17l5-4 4 3 3-2 4 3"/></svg>',
+};
+
+/* blobs SVG for header (pale blue) */
+const HDR_BLOBS = `<svg class="hdr-blobs" viewBox="0 0 460 216" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+  <g fill="#DCEBFB">
+    <ellipse cx="34" cy="24" rx="30" ry="20"/>
+    <ellipse cx="82" cy="60" rx="16" ry="12"/>
+    <ellipse cx="20" cy="80" rx="14" ry="18"/>
+    <ellipse cx="60" cy="14" rx="12" ry="9"/>
+  </g>
+  <g fill="#E7F1FD">
+    <ellipse cx="430" cy="30" rx="34" ry="24"/>
+    <ellipse cx="388" cy="70" rx="16" ry="12"/>
+  </g>
+</svg>`;
+
+/* decorative blobs for the whole web sheet corners (top-left + bottom) */
+const SHEET_BLOBS = `<svg class="sheet-blobs" viewBox="0 0 1120 1400" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+  <g fill="#DCEBFB" opacity="0.9">
+    <ellipse cx="20" cy="30" rx="70" ry="52"/>
+    <ellipse cx="110" cy="96" rx="34" ry="26"/>
+    <ellipse cx="6" cy="150" rx="30" ry="40"/>
+    <ellipse cx="88" cy="16" rx="26" ry="18"/>
+  </g>
+  <g fill="#E7F1FD">
+    <ellipse cx="1104" cy="40" rx="66" ry="46"/>
+    <ellipse cx="1030" cy="104" rx="30" ry="22"/>
+  </g>
+  <g fill="#DCEBFB" opacity="0.85">
+    <ellipse cx="60" cy="1388" rx="80" ry="54"/>
+    <ellipse cx="170" cy="1360" rx="34" ry="24"/>
+    <ellipse cx="1060" cy="1384" rx="76" ry="50"/>
+    <ellipse cx="960" cy="1360" rx="30" ry="22"/>
+  </g>
+</svg>`;
+
+const ACCOUNTS = [
+  { id: '689675477143515',   name: 'Codipi Odonto' },
+  { id: '1470280518205603',  name: 'Oral Erechim' },
+  { id: '311765557762111',   name: 'AmorSaúde Montes Claros' },
+  { id: '1072684846719512',  name: 'Dra. Marcela Teixeira' },
+  { id: '790456049040230',   name: 'Ortoestética Crato' },
+  { id: '3387911988092952',  name: 'Royaldent Cuiabá' },
+  { id: '929360292224667',   name: 'Dr. André' },
+  { id: '1748435462805770',  name: 'Dr. Warlley Cangussu' },
+  { id: '270676202099216',   name: 'LIFEFIT Academia' },
+  { id: '526890815448047',   name: 'Colégio Excelência — Montes Claros' },
+  { id: '3065328580315961',  name: 'Colégio Excelência — Bocaiúva' },
+  { id: '1541644763144335',  name: 'Wizard Curvelo — X Empreendimentos' },
+  { id: '1394820174442867',  name: 'Jotta Odontologia' },
+];
+/* Magscan e Ortoestética Sertânia ficaram de fora: faltava o ID numérico (act_) da conta nos dados fornecidos. */
+
+let activeTab = 0;
+const cache = {};
+
+function buildTabs() {
+  document.getElementById('tabsWrap').innerHTML =
+    ACCOUNTS.map((a,i) =>
+      `<div class="tab${i===0?' active':''}" id="tab${i}" onclick="switchTab(${i})">${a.name}</div>`
+    ).join('');
+}
+function switchTab(i) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(`tab${i}`).classList.add('active');
+  activeTab = i;
+  loadData(i);
+}
+function reloadTab() {
+  Object.keys(cache).forEach(k => delete cache[k]);
+  loadData(activeTab);
+}
+async function gql(path, params={}) {
+  const url = new URL('/api/meta', window.location.origin);
+  url.searchParams.set('path', path);
+  for (const [k,v] of Object.entries(params)) url.searchParams.set(k,v);
+  const r = await fetch(url);
+  const d = await r.json();
+  if (d.error) throw new Error(d.error.message);
+  return d;
+}
+async function loadData(idx) {
+  const acc = ACCOUNTS[idx];
+  const preset = document.getElementById('datePreset').value;
+  const key = `${acc.id}_${preset}`;
+  setLoading(acc.name);
+  try {
+    if (!cache[key]) cache[key] = await fetchAll(acc, preset);
+    render(acc, cache[key]);
+  } catch(e) { setError(e.message); }
+}
+async function fetchAll(acc, preset) {
+  const act = `act_${acc.id}`;
+  const totals = await gql(`${act}/insights`, { fields:'spend,reach,impressions,clicks,inline_link_clicks,cpm,ctr,cpc,frequency,actions,action_values,purchase_roas', date_preset:preset })
+    .catch(e => { throw new Error('[1/4 insights] ' + e.message); });
+  const camps = await gql(`${act}/campaigns`, { fields: 'name,objective,effective_status', limit: 50 })
+    .catch(e => { throw new Error('[2/4 campaigns] ' + e.message); });
+  const campIns = await gql(`${act}/insights`, {
+    level: 'campaign',
+    fields: 'campaign_id,campaign_name,spend,reach,impressions,clicks,inline_link_clicks,cpm,ctr,cpc,frequency,actions,action_values,purchase_roas',
+    date_preset: preset, limit: 30
+  }).catch(e => { throw new Error('[3/4 campaign insights] ' + e.message); });
+  const adsIns = await gql(`${act}/insights`, {
+    level:'ad', fields:'ad_id,ad_name,spend,reach,impressions,clicks', date_preset:preset, limit:20
+  }).catch(e => { throw new Error('[4/4 ad insights] ' + e.message); });
+
+  const campInsMap = {};
+  (campIns.data||[]).forEach(c => { campInsMap[c.campaign_id] = c; });
+  const campaigns = (camps.data||[])
+    .map(c => ({ ...c, _ins: campInsMap[c.id] || null }))
+    .filter(c => Number(c._ins?.impressions||0) > 1);
+  const rawAds = (adsIns.data||[])
+    .filter(a => Number(a.impressions||0) > 1)
+    .sort((a,b) => Number(b.reach||0) - Number(a.reach||0))
+    .slice(0,3);
+  const topAds = await Promise.all(rawAds.map(async ad => {
+    try {
+      const d = await gql(ad.ad_id, { fields:'creative{thumbnail_url,image_url}' });
+      return { ...ad, thumb: d.creative?.thumbnail_url || d.creative?.image_url || null };
+    } catch { return { ...ad, thumb:null }; }
+  }));
+  return { summary: totals.data?.[0]||{}, campaigns, topAds };
+}
+
+const N   = n => n ? Number(n).toLocaleString('pt-BR') : '0';
+const BRL = n => n ? Number(n).toLocaleString('pt-BR',{style:'currency',currency:'BRL'}) : 'R$ 0,00';
+
+function dateLabel() {
+  const p = document.getElementById('datePreset').value;
+  const d = new Date(), day=d.getDate(), yr=d.getFullYear();
+  const mo = d.toLocaleString('pt-BR',{month:'long'});
+  return { this_month:`01 a ${day} de ${mo} de ${yr}`, last_month:'Mês anterior',
+           last_7d:'Últimos 7 dias', last_30d:'Últimos 30 dias',
+           this_year:`Janeiro a ${mo} de ${yr}` }[p]||p;
+}
+function periodShort() {
+  const p = document.getElementById('datePreset').value;
+  const d = new Date();
+  return { this_month:`01–${d.getDate()}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`,
+           last_month:'Mês anterior', last_7d:'Últ. 7 dias',
+           last_30d:'Últ. 30 dias', this_year:String(d.getFullYear()) }[p]||p;
+}
+function isDeliveryCampaign(name='', obj='') {
+  const t = (name+obj).toUpperCase();
+  return t.includes('IFOOD') || t.includes('DELIVERY') || t.includes('VENDA') || t.includes('CONVERSÃO') || t.includes('CONVERSAO');
+}
+function campIcon(name='', obj='') {
+  const t = (name+obj).toUpperCase();
+  if (t.includes('VIDEO')||t.includes('VÍDEO')||t.includes('REEL')) return IC.play;
+  if (t.includes('SEGUIDOR')||t.includes('FOLLOW')||t.includes('PERFIL')) return IC.follow;
+  if (isDeliveryCampaign(name, obj)) return IC.cart;
+  if (t.includes('ALCAN')||t.includes('REACH')||t.includes('TEMÁTIC')||t.includes('TEMATIC')) return IC.target;
+  return IC.mega;
+}
+
+function setLoading(name) {
+  document.getElementById('dashPage').innerHTML =
+    `<div class="state-box"><div class="spinner"></div><p>Carregando dados de<br><strong>${name}</strong>…</p></div>`;
+}
+function setError(msg) {
+  const isTokenIssue = /cannot parse access token|invalid oauth access token|não configurad|espaços/i.test(msg);
+  const hint = isTokenIssue
+    ? 'O valor de <code>TOKEN_META</code> no Vercel parece inválido. Gere um novo token de sistema (long-lived) em Business Settings → System Users, cole-o na variável <code>TOKEN_META</code> (Project Settings → Environment Variables) sem aspas ou espaços extras, e faça um novo deploy.'
+    : 'Verifique a variável <code>TOKEN_META</code> no Vercel e a permissão <code>ads_read</code>.';
+  document.getElementById('dashPage').innerHTML =
+    `<div class="state-box"><div class="state-ico">${IC.bolt}</div>
+     <div class="err-box">${msg}</div>
+     <p style="font-size:12px;font-weight:600">${hint}</p></div>`;
+}
+
+const RB = ['rb-1','rb-2','rb-3'];
+
+function render(acc, data) {
+  document.getElementById('dashPage').innerHTML = buildReport(acc, data);
+}
+
+function buildReport(acc, {summary, campaigns, topAds}) {
+  const best   = topAds[0]||null;
+  const topClk = [...topAds].sort((a,b)=>Number(b.clicks||0)-Number(a.clicks||0))[0];
+  const topRch = [...topAds].sort((a,b)=>Number(b.reach||0)-Number(a.reach||0))[0];
+  const topImp = [...topAds].sort((a,b)=>Number(b.impressions||0)-Number(a.impressions||0))[0];
+
+  const campsHtml = campaigns.length === 0
+    ? '<p class="no-data">Nenhuma campanha veiculou no período.</p>'
+    : campaigns.map(c => {
+        const ins = c._ins||{};
+        return `<div class="camp-item">
+          <div class="camp-ico">${campIcon(c.name, c.objective||'')}</div>
+          <div class="camp-main">
+            <div class="camp-name">${c.name}</div>
+            <div class="camp-spend">${BRL(ins.spend)} investido</div>
+          </div>
+          <div class="camp-nums">
+            <div><div class="cn-l">Alcance</div><div class="cn-v">${N(ins.reach)}</div></div>
+            <div><div class="cn-l">Impr.</div><div class="cn-v">${N(ins.impressions)}</div></div>
+          </div>
+        </div>`;
+      }).join('');
+
+  const adMetrics = ad => `<div class="ad-metrics">
+      <div><div class="am-l">Alcance</div><div class="am-v">${N(ad.reach)}</div></div>
+      <div><div class="am-l">Impressões</div><div class="am-v">${N(ad.impressions)}</div></div>
+      <div><div class="am-l">Cliques</div><div class="am-v">${N(ad.clicks)}</div></div>
+    </div>`;
+  const thumb = ad => ad.thumb
+    ? `<img class="ad-thumb" src="${ad.thumb}" crossorigin="anonymous" alt="" onerror="this.outerHTML='<div class=ad-thumb-ph>${IC.img.replace(/"/g,'&quot;')}</div>'">`
+    : `<div class="ad-thumb-ph">${IC.img}</div>`;
+
+  const top1Html = topAds[0] ? `
+    <div class="top1-card">
+      <div class="top1-seal">${IC.star} MELHOR DESEMPENHO</div>
+      <div class="ad-item" style="padding:8px 0 0;border:none">
+        <div class="rank-badge rb-1">1</div>
+        ${thumb(topAds[0])}
+        <div class="ad-info">
+          <div class="ad-name" title="${topAds[0].ad_name}">${topAds[0].ad_name}</div>
+          ${adMetrics(topAds[0])}
+        </div>
+      </div>
+    </div>` : '';
+
+  const otherAdsHtml = topAds.slice(1).map((ad,i) => `
+      <div class="ad-item">
+        <div class="rank-badge ${RB[i+1]}">${i+2}</div>
+        ${thumb(ad)}
+        <div class="ad-info">
+          <div class="ad-name" title="${ad.ad_name}">${ad.ad_name}</div>
+          ${adMetrics(ad)}
+        </div>
+      </div>`).join('');
+
+  const adsHtml = topAds.length === 0
+    ? '<p class="no-data">Sem dados de anúncios no período.</p>'
+    : top1Html + (otherAdsHtml ? `<div class="section-divider">${IC.target}</div>${otherAdsHtml}` : '');
+
+  const insCards = [
+    {ico:IC.trophy, label:'Melhor anúncio',        name:best?.ad_name||'—',    value:BRL(best?.spend)},
+    {ico:IC.cursor, label:'Maior vol. de cliques', name:topClk?.ad_name||'—',  value:`${N(topClk?.clicks)} cliques`},
+    {ico:IC.people, label:'Maior alcance',         name:topRch?.ad_name||'—',  value:`${N(topRch?.reach)} pessoas`},
+    {ico:IC.eye,    label:'Mais impressões',       name:topImp?.ad_name||'—',  value:`${N(topImp?.impressions)} imp.`},
+  ].map(c=>`<div class="ins-card">
+    <div class="ins-ico">${c.ico}</div>
+    <div class="ins-label">${c.label}</div>
+    <div class="ins-name" title="${c.name}">${c.name}</div>
+    <div class="ins-value">${c.value}</div>
+  </div>`).join('');
+
+  const AP = ['omni_purchase','purchase','offsite_conversion.fb_pixel_purchase','onsite_web_purchase'];
+  const av = (arr,types)=>{ if(!Array.isArray(arr)) return 0; for(const t of types){ const f=arr.find(a=>a.action_type===t); if(f) return Number(f.value)||0; } return 0; };
+
+  // Vendas/Delivery: métricas isoladas apenas das campanhas de vendas/delivery (não do total da conta)
+  const deliveryCampaigns = campaigns.filter(c => c._ins && isDeliveryCampaign(c.name, c.objective||''));
+  const sumNum   = field => deliveryCampaigns.reduce((s,c)=> s + (Number(c._ins[field])||0), 0);
+  const sumClicks = deliveryCampaigns.reduce((s,c)=> s + (Number(c._ins.clicks)||0), 0);
+  const sumAction = (key,types) => deliveryCampaigns.reduce((s,c)=> s + av(c._ins[key], types), 0);
+
+  const _sp = sumNum('spend'), _rc = sumNum('reach'), _im = sumNum('impressions');
+  const purch = sumAction('actions', AP);
+  const convVal = sumAction('action_values', AP);
+  const roas = _sp ? convVal/_sp : 0;
+  const cpa = purch ? _sp/purch : 0;
+  const cpm = _im ? _sp/_im*1000 : 0;
+  const isDelivery = deliveryCampaigns.length > 0;
+  const nf2 = n => Number(n||0).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+  const linkClicks = sumNum('inline_link_clicks') || sumAction('actions', ['link_click']);
+  const pageViews = sumAction('actions', ['landing_page_view','onsite_web_view_content']);
+  const costPV = pageViews ? _sp/pageViews : 0;
+  const ctr = _im ? sumClicks/_im*100 : 0;
+  const cpc = sumClicks ? _sp/sumClicks : 0;
+  const _sc = [
+    {show:purch>0,      ico:IC.bag,     label:'Compras no site',         val:N(purch)},
+    {show:purch>0,      ico:IC.tag,     label:'Custo por compra',        val:BRL(cpa)},
+    {show:convVal>0,    ico:IC.money,   label:'Valor de conversão',      val:BRL(convVal), hl:true},
+    {show:roas>0,       ico:IC.roas,    label:'ROAS',                    val:nf2(roas),    hl:true},
+    {show:true,         ico:IC.people,  label:'Alcance',                 val:N(_rc)},
+    {show:true,         ico:IC.eye,     label:'Impressões',              val:N(_im)},
+    {show:linkClicks>0, ico:IC.cursor,  label:'Cliques no link',         val:N(linkClicks)},
+    {show:pageViews>0,  ico:IC.browser, label:'Visualizações da página', val:N(pageViews)},
+    {show:pageViews>0,  ico:IC.money,   label:'Custo por visualização',  val:BRL(costPV)},
+    {show:ctr>0,        ico:IC.bars,    label:'CTR',                     val:nf2(ctr)+'%'},
+    {show:cpc>0,        ico:IC.cursor,  label:'CPC',                     val:BRL(cpc)},
+    {show:true,         ico:IC.cpm,     label:'CPM',                     val:BRL(cpm)},
+  ];
+  const salesCards = _sc.filter(c=>c.show).map(c=>`<div class="stat-card${c.hl?' hl':''}"><div class="stat-ico">${c.ico}</div><div class="stat-label">${c.label}</div><div class="stat-value">${c.val}</div></div>`).join('');
+  const deliveryCampNames = deliveryCampaigns.map(c=>c.name).join(', ');
+  const salesHtml = isDelivery ? `
+    <div class="section" style="margin-bottom:18px">
+      <div class="sec-title"><div class="sec-ico">${IC.bag}</div><span class="sec-pill">Vendas / Conversões</span></div>
+      <p style="font-size:11.5px;font-weight:700;color:var(--ink3);margin:-10px 0 16px" title="${deliveryCampNames}">Métricas isoladas de: ${deliveryCampNames}</p>
+      <div class="sales-grid">${salesCards}</div>
+    </div>` : '';
+  return `
+  <div id="exportTarget">
+    ${SHEET_BLOBS}
+    <div class="dash-header">
+      <div class="hdr-row">
+        <div class="hdr-logo-mark" role="img" aria-label="Foco Marketing">
+          <span class="lm-foco">foco</span><span class="lm-marketing">marketing</span><span class="lm-dot">.</span>
+          <svg width="19" height="23" viewBox="0 0 19 23" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 22V2"/><path d="M3 2h9c2.6 0 2.6 3.4 0 3.4H8.5c-2.6 0-2.6 3.4 0 3.4H14"/></svg>
+        </div>
+      </div>
+      <div class="h-title">Relatório de Meta Ads</div>
+      <div class="h-accent"></div>
+      <div class="h-sub">Meta Ads — <b>Agência Foco</b> <span class="h-unit">| ${acc.name.toUpperCase()}</span></div>
+      <div>
+        <span class="date-pill">${IC.cal} ${dateLabel()}</span>
+        <span class="live-pill"><span class="live-dot"></span> Dados em tempo real</span>
+      </div>
+    </div>
+
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-ico">${IC.money}</div>
+        <div class="kpi-label">Total investido</div>
+        <div class="kpi-value">${BRL(summary.spend)}</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-ico">${IC.people}</div>
+        <div class="kpi-label">Alcance total</div>
+        <div class="kpi-value">${N(summary.reach)}</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-ico">${IC.eye}</div>
+        <div class="kpi-label">Impressões totais</div>
+        <div class="kpi-value">${N(summary.impressions)}</div>
+      </div>
+    </div>
+
+    ${salesHtml}
+
+    <div class="report-grid">
+      <div class="section span-2">
+        <div class="sec-title"><div class="sec-ico">${IC.mega}</div><span class="sec-pill">Campanhas veiculadas</span></div>
+        ${campsHtml}
+      </div>
+
+      <div class="section${topAds.length > 0 ? '' : ' span-2'}">
+        <div class="sec-title"><div class="sec-ico">${IC.trophy}</div><span class="sec-pill">Melhores anúncios</span></div>
+        ${adsHtml}
+      </div>
+
+      ${topAds.length > 0 ? `
+      <div class="section">
+        <div class="sec-title"><div class="sec-ico">${IC.bolt}</div><span class="sec-pill">Insights rápidos</span></div>
+        <div class="ins-grid">${insCards}</div>
+      </div>` : ''}
+
+      <div class="section span-2">
+        <div class="sec-title"><div class="sec-ico">${IC.infinity}</div><span class="sec-pill">Resumo da conta Meta Ads</span></div>
+        <div class="meta-row">
+          <div class="meta-logo"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M14 8.5V7c0-.9.4-1.3 1.3-1.3H17V2.7h-2.5c-2.7 0-3.8 1.4-3.8 3.9v1.9H9v3h1.7V22H14v-10.5h2.4l.4-3H14Z"/></svg></div>
+          <div>
+            <div class="meta-info-label">Meta Ads</div>
+            <div class="meta-info-name">Agência Foco | ${acc.name}</div>
+          </div>
+        </div>
+        <div class="resumo-grid">
+          <div><div class="rg-label">Investimento</div><div class="rg-value">${BRL(summary.spend)}</div></div>
+          <div><div class="rg-label">Alcance</div><div class="rg-value">${N(summary.reach)}</div></div>
+          <div><div class="rg-label">Impressões</div><div class="rg-value">${N(summary.impressions)}</div></div>
+          <div><div class="rg-label">Período</div><div class="rg-value" style="font-size:13px">${periodShort()}</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="dash-footer">
+      <svg class="foot-wave" viewBox="0 0 460 60" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0 38 C 70 20, 140 56, 230 40 C 320 24, 390 52, 460 36 L460 60 L0 60 Z" fill="rgba(255,255,255,.10)"/>
+        <path d="M0 48 C 80 34, 150 60, 240 46 C 330 32, 400 56, 460 44 L460 60 L0 60 Z" fill="rgba(255,255,255,.08)"/>
+      </svg>
+      <div class="foot-inner">
+        <div class="foot-ico">${IC.target}</div>
+        <div class="foot-tagline">Marketing, tecnologia e IA trabalhando <b>juntos</b>.</div>
+      </div>
+      <div class="foot-meta">Dados de Meta Ads · ${acc.name}</div>
+    </div>
+  </div>`;
+}
+
+async function exportImage() {
+  const el = document.getElementById('exportTarget');
+  if (!el) return;
+  const btn = document.getElementById('btnExport');
+  btn.disabled = true; btn.textContent = 'Gerando imagem…';
+  try {
+    const canvas = await html2canvas(el, { scale:2.5, useCORS:true, backgroundColor:'#EEF6FE', logging:false });
+    const link = document.createElement('a');
+    link.download = `foco_${ACCOUNTS[activeTab].name.replace(/\s+/g,'_')}_meta_ads.png`;
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+  } catch(e) { alert('Erro: '+e.message); }
+  btn.disabled = false; btn.innerHTML = IC.cam + ' Exportar como imagem';
+}
+
+async function exportAllClients() {
+  const btn = document.getElementById('btnBulk');
+  const preset = document.getElementById('datePreset').value;
+  const original = btn.textContent;
+  btn.disabled = true;
+
+  const offscreen = document.createElement('div');
+  offscreen.className = 'page';
+  offscreen.style.cssText = 'position:fixed; left:-99999px; top:0; padding:0;';
+  document.body.appendChild(offscreen);
+
+  const zip = new JSZip();
+  const failed = [];
+
+  for (let i = 0; i < ACCOUNTS.length; i++) {
+    const acc = ACCOUNTS[i];
+    btn.textContent = `Baixando ${i+1}/${ACCOUNTS.length} — ${acc.name}…`;
+    try {
+      const key = `${acc.id}_${preset}`;
+      if (!cache[key]) cache[key] = await fetchAll(acc, preset);
+      offscreen.innerHTML = buildReport(acc, cache[key]);
+      await new Promise(r => setTimeout(r, 80));
+      const el = offscreen.querySelector('#exportTarget');
+      const canvas = await html2canvas(el, { scale:2, useCORS:true, backgroundColor:'#EEF6FE', logging:false });
+      const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
+      zip.file(`foco_${acc.name.replace(/\s+/g,'_')}_meta_ads.png`, blob);
+    } catch (e) {
+      failed.push(acc.name);
+      console.error(`Falha em ${acc.name}:`, e.message);
+    }
+  }
+
+  document.body.removeChild(offscreen);
+
+  if (Object.keys(zip.files).length === 0) {
+    alert('Não foi possível gerar nenhuma imagem. Verifique o token e tente novamente.');
+  } else {
+    btn.textContent = 'Compactando arquivo…';
+    const content = await zip.generateAsync({ type: 'blob' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(content);
+    link.download = `foco_relatorios_${preset}.zip`;
+    link.click();
+    if (failed.length) alert(`Concluído com falhas em: ${failed.join(', ')}`);
+  }
+
+  btn.disabled = false;
+  btn.textContent = original;
+}
+
+/* boot: inject static icons and auto-load first unit (token comes from server env) */
+document.getElementById('btnExport').innerHTML = IC.cam + ' Exportar como imagem';
+buildTabs();
+loadData(activeTab);
+</script>
+</body>
+</html>
