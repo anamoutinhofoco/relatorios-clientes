@@ -153,8 +153,9 @@ body {
 .grid-3 { display: grid; grid-template-columns: 1.6fr 1fr 1fr; gap: 14px; margin-bottom: 14px; }
 .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
 .grid-4 { display: grid; grid-template-columns: repeat(4,1fr); gap: 14px; margin-bottom: 14px; }
+.grid-2 > *, .grid-3 > *, .grid-4 > * { min-width: 0; }
 @media (max-width: 1000px) { .grid-3, .grid-2, .grid-4 { grid-template-columns: 1fr; } }
-.section { background: var(--white); border: 1px solid var(--line); border-radius: var(--r-card); padding: 18px 18px 16px; box-shadow: var(--shadow-sm); }
+.section { background: var(--white); border: 1px solid var(--line); border-radius: var(--r-card); padding: 18px 18px 16px; box-shadow: var(--shadow-sm); min-width: 0; }
 .sec-title { display: flex; align-items: center; gap: 9px; margin-bottom: 14px; }
 .sec-ico { width: 30px; height: 30px; border-radius: 9px; background: var(--circle); color: var(--blue); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 .sec-ico svg { width: 15px; height: 15px; }
@@ -198,9 +199,9 @@ td.trend { text-align: center; }
 /* ── DONUT ── */
 .donut-wrap { display: flex; align-items: center; gap: 18px; }
 .donut-center { position: relative; }
-.donut-total { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
-.donut-total .dt-l { font-size: 9px; color: var(--ink3); font-weight: 700; text-transform: uppercase; }
-.donut-total .dt-v { font-size: 15px; font-weight: 900; color: var(--blue-deep); }
+.donut-total { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 0 10px; }
+.donut-total .dt-l { font-size: 8px; color: var(--ink3); font-weight: 700; text-transform: uppercase; margin-bottom: 2px; }
+.donut-total .dt-v { font-size: 11px; font-weight: 900; color: var(--blue-deep); line-height: 1.15; word-break: break-word; }
 .legend { display: flex; flex-direction: column; gap: 9px; flex: 1; min-width: 0; }
 .legend-row { display: flex; align-items: center; gap: 8px; font-size: 12px; }
 .legend-dot { width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; }
