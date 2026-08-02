@@ -221,7 +221,7 @@ td.trend { text-align: center; }
 .ad-thumb-ph svg { width: 20px; height: 20px; }
 .ad-info { flex: 1; min-width: 0; }
 .ad-name { font-size: 12.5px; font-weight: 800; color: var(--ink); margin-bottom: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.ad-metrics { display: flex; gap: 16px; }
+.ad-metrics { display: flex; flex-wrap: wrap; gap: 8px 16px; min-width: 0; }
 .ad-metrics .am-l { font-size: 9px; color: var(--ink3); font-weight: 700; text-transform: uppercase; }
 .ad-metrics .am-v { font-size: 12.5px; font-weight: 900; color: var(--blue-deep); }
 .top1-seal { display:inline-flex; align-items:center; gap:4px; background: linear-gradient(135deg, #FCD34D, #F59E0B); color: #7C3A00; font-size: 9px; font-weight: 900; padding: 3px 9px; border-radius: 100px; margin-bottom: 8px; letter-spacing:.3px; }
@@ -742,8 +742,8 @@ function buildReport(acc, { summary, prevSummary, campaigns, topAds, daily, gend
     ? `<img class="ad-thumb" src="${ad.thumb}" crossorigin="anonymous" alt="" onerror="this.outerHTML='<div class=ad-thumb-ph>${IC.img20.replace(/"/g,'&quot;')}</div>'">`
     : `<div class="ad-thumb-ph">${IC.img20}</div>`;
   const adsHtml = adsWithConv.length===0 ? '<p class="no-data">Sem dados de anúncios no período.</p>' : adsWithConv.map((ad,i) => `
+    ${i===0?`<div class="top1-seal">★ MELHOR DESEMPENHO</div>`:''}
     <div class="ad-item">
-      ${i===0?`<div><div class="top1-seal">★ MELHOR DESEMPENHO</div></div>`:''}
       <div class="rank-badge ${['rb-1','rb-2','rb-3'][i]||'rb-3'}">${i+1}</div>
       ${thumb(ad)}
       <div class="ad-info">
